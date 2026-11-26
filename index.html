@@ -107,6 +107,29 @@ body:has(#trainingScreen:not([hidden])) main{max-width:1460px;padding:18px 24px 
 .example-table{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeric:tabular-nums}
 .example-table th,.example-table td{padding:8px 6px;text-align:start;border-bottom:1px solid var(--edge)}
 .reading-grid form{margin-top:12px}
+.manual-nav{display:grid;gap:6px;margin-top:14px;padding-top:12px;border-top:1px solid var(--edge)}
+.manual-nav button{min-height:44px;padding:8px 10px;border-color:#46546a;background:#202b3b;text-align:left;font-size:.87rem}
+.manual-nav button:hover{background:#28364a}
+#loginScreen #loginSystemManual{display:block;margin:18px auto 0;min-height:44px}
+#manualDialog{--edge:#354154;width:min(690px,calc(100% - 24px));max-width:none;max-height:calc(100dvh - 32px);padding:0;overflow:hidden;color:#ebedf2;background:#141c29;border:1px solid #46546a;border-radius:15px;box-shadow:0 16px 60px #05080d9c}
+#manualDialog[open]{display:flex;flex-direction:column}
+#manualDialog::backdrop{background:#05080dcc}
+.manual-header{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-shrink:0;padding:13px 16px;background:#192637;border-bottom:1px solid #354154}
+.manual-header h2{margin:0;font-size:1.14rem}
+.manual-header button,.manual-links button{min-height:44px}
+#manualDialog button:focus-visible{outline:2px solid #f3c675;outline-offset:3px}
+#manualBody{overflow:auto;overscroll-behavior:contain;padding:2px 16px 16px}
+#manualBody h3{margin:17px 0 5px;color:#f3c675;font-size:1rem}
+#manualBody p{margin:6px 0 10px;line-height:1.6}
+#manualBody ol,#manualBody ul{margin:4px 0 10px;padding-inline-start:22px}
+#manualBody .example-table{margin:10px 0 12px}
+#manualBody details{margin-top:14px}
+#manualBody a{color:#f3c675}
+.manual-links{display:flex;flex-wrap:wrap;gap:8px;margin-top:15px}
+.phone-chart-controls{display:none}
+@media(min-width:881px){
+  .lesson-nav{position:sticky;top:12px;max-height:calc(100dvh - 24px);overflow:auto}
+}
 @media(max-width:1050px){
   .workspace-layout{grid-template-columns:190px minmax(0,1fr)}
   .workspace-header{flex-wrap:wrap;align-items:center}
@@ -117,18 +140,29 @@ body:has(#trainingScreen:not([hidden])) main{max-width:1460px;padding:18px 24px 
   .lesson-nav{padding:9px 12px}
   .lesson-nav-title,.lesson-group{display:none}
   .lesson-picker{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);align-items:center;gap:8px;margin:0;color:#edf1f7;font-size:.88rem}
-  .lesson-picker select{min-height:44px;width:100%}
+  .lesson-picker select{min-height:44px;width:100%;font-size:16px}
+  .manual-nav{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:8px;padding-top:8px}
+  .manual-nav button{text-align:center}
 }
-@media(max-width:650px){
+@media(max-width:720px){
   #signedIn{padding:9px 10px}
-  #accountToolbar button{min-height:40px;padding:6px 8px;font-size:.86rem}
+  #accountToolbar button{min-height:44px;padding:6px 9px;font-size:.86rem}
   .workspace-header{gap:9px;padding:14px}
   #lessonIntro{font-size:.9rem}
-  #lessonNext{min-height:40px;font-size:.88rem}
+  #lessonNext{min-height:44px;font-size:.88rem}
   .workspace-content .layout{grid-template-columns:minmax(0,1fr);gap:0}
   .reading-grid{grid-template-columns:minmax(0,1fr);gap:0}
-  .workspace-content #chart{height:280px}
+  .workspace-content #chart{height:clamp(246px,72vw,340px)}
   .workspace-content section{padding:12px}
+  .demo-controls .row{display:grid;grid-template-columns:minmax(0,1fr);gap:9px}
+  .demo-actions,.phone-chart-actions{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:6px}
+  .demo-actions button,.phone-chart-actions button{min-width:0;padding:8px 5px}
+  .phone-chart-controls{display:block;margin:10px 0}
+  .phone-chart-actions button{min-height:44px}
+  #phoneTradeStatus{margin:7px 0;color:var(--muted);font-size:.85rem}
+  #phoneTradeStatus:empty{display:none}
+  .manual-header{padding:10px 12px}
+  #manualBody{padding:2px 12px 12px}
 }
 .guide-patterns{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,235px),1fr));gap:12px;margin:12px 0}.guide-card{background:#121722;border:1px solid #384354;border-radius:12px;padding:14px}.guide-card h3{margin:10px 0 4px;font-size:16px;overflow-wrap:anywhere}.guide-card p{margin:0;font-size:14px}.guide-chart{position:relative;height:132px;border-radius:8px;background:repeating-linear-gradient(to bottom,#283246 0 1px,transparent 1px 25%);overflow:hidden}.guide-candle{position:absolute;inset:0 auto 0 var(--x);color:#ff7585;width:clamp(12px,4vw,24px);transform:translateX(-50%);z-index:1}.guide-candle.up{color:#50e0ad}.guide-candle.context{opacity:.45}.guide-candle:before{content:"";position:absolute;left:calc(50% - 1px);top:var(--high);height:var(--wick);width:2px;background:currentColor}.guide-candle i{position:absolute;inset:var(--top) 0 auto;background:currentColor;height:var(--body);min-height:2px;border-radius:2px}.guide-level{position:absolute;inset:var(--level) 0 auto;border-top:2px dashed #f7c66b}</style>
 <div id="loginBackdrop" aria-hidden="true"><span style="--x:3%;--y:72%;--wick:8%"></span><span style="--x:7.1%;--y:66%;--wick:15%"></span><span class="down" style="--x:11.2%;--y:68%;--wick:14%"></span><span style="--x:15.299999999999999%;--y:58%;--wick:13%"></span><span style="--x:19.4%;--y:53%;--wick:12%"></span><span class="down" style="--x:23.5%;--y:56%;--wick:11%"></span><span style="--x:27.599999999999998%;--y:48%;--wick:10%"></span><span style="--x:31.699999999999996%;--y:42%;--wick:9%"></span><span class="down" style="--x:35.8%;--y:45%;--wick:8%"></span><span style="--x:39.9%;--y:35%;--wick:15%"></span><span style="--x:44%;--y:30%;--wick:14%"></span><span class="down" style="--x:48.099999999999994%;--y:37%;--wick:13%"></span><span class="down" style="--x:52.199999999999996%;--y:40%;--wick:12%"></span><span class="down" style="--x:56.3%;--y:47%;--wick:11%"></span><span style="--x:60.39999999999999%;--y:41%;--wick:10%"></span><span style="--x:64.5%;--y:32%;--wick:9%"></span><span style="--x:68.6%;--y:25%;--wick:8%"></span><span class="down" style="--x:72.69999999999999%;--y:28%;--wick:15%"></span><span style="--x:76.8%;--y:18%;--wick:14%"></span><span class="down" style="--x:80.89999999999999%;--y:20%;--wick:13%"></span><span style="--x:85%;--y:12%;--wick:12%"></span><span class="down" style="--x:89.1%;--y:15%;--wick:11%"></span><span style="--x:93.19999999999999%;--y:8%;--wick:10%"></span><span class="down" style="--x:97.3%;--y:11%;--wick:9%"></span></div><main><section id="loginScreen" aria-label="เข้าสู่ระบบ Trading Lab">
@@ -157,7 +191,8 @@ body:has(#trainingScreen:not([hidden])) main{max-width:1460px;padding:18px 24px 
 </form>
 <p id="forgotBackRow" class="signup-row" hidden><button type="button" class="account-link" id="forgotBack">กลับไปเข้าสู่ระบบ</button></p>
 <form id="recoveryForm" hidden><label>รหัสผ่านใหม่<input id="newPassword" type="password" autocomplete="new-password" minlength="8" required></label><button class="login-primary" id="savePassword">บันทึกรหัสผ่านใหม่</button></form>
-<output id="accountStatus" aria-live="polite"></output></section>
+<output id="accountStatus" aria-live="polite"></output>
+<button type="button" id="loginSystemManual" class="account-link" aria-haspopup="dialog">คู่มือใช้งานระบบ</button></section>
 <div id="trainingScreen" hidden inert>
 <header id="signedIn" hidden>
   <div class="workspace-brand"><span class="brand-symbol" aria-hidden="true"><i></i><i></i><i></i></span><div><strong>PUROnGXAU</strong><small>ห้องฝึกเทรดทอง XAUUSD</small></div></div>
@@ -186,6 +221,10 @@ body:has(#trainingScreen:not([hidden])) main{max-width:1460px;padding:18px 24px 
       <optgroup label="ขั้นสูง"><option value="retest">5 · Breakout &amp; Retest</option><option value="plan">6 · วางแผนล่วงหน้า</option></optgroup>
     </select>
   </label>
+  <div class="manual-nav">
+    <button type="button" id="openTradeManual" aria-haspopup="dialog">คู่มือเทรด XAUUSD</button>
+    <button type="button" id="openSystemManual" aria-haspopup="dialog">คู่มือใช้งานระบบ</button>
+  </div>
 </nav>
 <div class="workspace-content">
 <header class="workspace-header">
@@ -239,6 +278,10 @@ body:has(#trainingScreen:not([hidden])) main{max-width:1460px;padding:18px 24px 
 <output id="trainingHint" aria-live="polite"></output></details>
 <div class="layout"><section><h2 id="caption"></h2><canvas id="chart" aria-label="กราฟแท่งเทียนทองคำจำลองพร้อมเลขลำดับใต้แท่งเทียน"></canvas><p id="ohlc"></p>
 <div class="demo-legend" id="demoLegend" hidden><span>จุดเข้า</span><span>จุดออก</span></div>
+<div class="phone-chart-controls" id="phoneChartControls" role="group" aria-label="ควบคุมออเดอร์ใต้กราฟ">
+  <div class="phone-chart-actions"><button type="button" id="chartStep">เปิดแท่งถัดไป</button><button type="button" id="chartExit" disabled>ปิดออเดอร์เอง</button></div>
+  <p id="phoneTradeStatus"></p>
+</div>
 <aside id="coachPanel" hidden aria-labelledby="coachTitle">
 <div class="row"><h3 id="coachTitle">สัญญาณฝึกจาก AI</h3><small id="coachTime"></small></div>
 <output id="coachSignal" aria-live="polite"></output><p id="coachReading"></p>
@@ -269,16 +312,58 @@ body:has(#trainingScreen:not([hidden])) main{max-width:1460px;padding:18px 24px 
 </section></div>
 <section id="contextPanel"><h2>อ่านกราฟก่อนวางแผน</h2>
 <p id="context"></p>
-<details id="guide"><summary>เปิดคู่มือวางแผนและทบทวน</summary>
-<ol>
-<li><strong>ดูโครงสร้างบน M15</strong> มองหายอดและฐานที่ยกสูงขึ้น ลดต่ำลง หรือยังสลับกันในกรอบ แล้วทำเครื่องหมายบริเวณยอดและฐานเดิม</li>
-<li><strong>หาจังหวะบน M5</strong> ฝึกสังเกตว่าราคาทดสอบระดับเดิมแล้วปิดกลับเข้ากรอบ หรือทะลุระดับแล้วกลับมาทดสอบจากอีกด้าน อ่านไส้เทียนพร้อมตำแหน่งที่เกิด</li>
-<li><strong>กำหนดราคาเข้าและเงื่อนไขยกเลิกแผน</strong> ระบุว่าจะรอราคาใดและอะไรทำให้มุมมองใช้ไม่ได้ จากนั้นวาง SL ตามระดับนั้น และเลือก TP จากบริเวณที่ต้องการออก</li>
-<li><strong>เลือกข้ามได้</strong> หากอ่านโครงสร้างยังไม่ชัดหรือจุดออกอยู่ใกล้เกินไปเมื่อเทียบกับระยะ SL ให้จดเหตุผลและข้ามโจทย์</li>
-<li><strong>ทบทวนหลังออก</strong> เทียบผลเป็น R กับสิ่งที่เห็นก่อนเปิดแท่งถัดไป แล้วจดหนึ่งอย่างที่จะปรับในการฝึกรอบหน้า</li>
-</ol></details></section>
+<button type="button" id="openContextManual" aria-haspopup="dialog">เปิดคู่มือเทรด</button></section>
 <section id="journalPanel"><h2>สมุดบันทึกผลฝึก</h2><ol id="journal"></ol></section>
-</div></div></div></div></main>
+</div></div></div></div>
+<dialog id="manualDialog" aria-labelledby="manualTitle">
+  <div class="manual-header"><h2 id="manualTitle"></h2><button type="button" id="closeManual" autofocus>ปิดคู่มือ</button></div>
+  <div id="manualBody">
+    <article id="tradeManual" hidden>
+      <p>ใช้กราฟ XAUUSD จำลองฝึกอ่านตลาด วางแผนเข้า และทบทวนการออกออเดอร์</p>
+      <h3>1. อ่านกราฟก่อนเลือกทิศทาง</h3>
+      <ol>
+        <li>เริ่มจาก M15 เพื่อดูว่ายอดและฐานสูงขึ้น ต่ำลง หรือสลับกันในกรอบ แล้วทำเครื่องหมายบริเวณยอดและฐานเดิม</li>
+        <li>ใช้ M5 หาจังหวะฝึก อ่านราคาเปิด ราคาปิด จุดสูงสุด จุดต่ำสุด และดูว่าไส้เทียนอยู่ใกล้ระดับสำคัญหรือไม่</li>
+        <li>ในโจทย์ Breakout &amp; Retest ให้แยกแท่งที่ปิดพ้นระดับออกจากแท่งที่ย้อนกลับมาทดสอบ ถ้ายังระบุระดับหรือเหตุผลเข้าไม่ได้ ให้รอหรือบันทึกข้ามโจทย์</li>
+      </ol>
+      <h3>2. กำหนดราคาเข้า จุดตัดขาดทุน และเป้ากำไร</h3>
+      <p>เลือก <strong>Buy</strong> เมื่อแผนฝึกคาดว่าราคาจะขึ้น หรือ <strong>Sell</strong> เมื่อคาดว่าราคาจะลง วาง <strong>SL</strong> ตรงระดับที่แผนใช้ไม่ได้ และให้ <strong>TP</strong> เป็นเป้าปิดกำไร</p>
+      <table class="example-table" aria-label="ลำดับระดับราคาสำหรับ Buy และ Sell"><thead><tr><th scope="col">ฝั่ง</th><th scope="col">เรียงจากราคาต่ำไปราคาสูง</th></tr></thead><tbody>
+        <tr><th scope="row">Buy</th><td>SL &lt; ราคาเข้า &lt; TP</td></tr>
+        <tr><th scope="row">Sell</th><td>TP &lt; ราคาเข้า &lt; SL</td></tr>
+      </tbody></table>
+      <h3>3. อ่านผลเป็น R</h3>
+      <p>1R คือระยะจากราคาเข้าถึง SL ตัวอย่าง Buy ที่ <strong>2450.00</strong> ตั้ง SL ที่ <strong>2448.00</strong> และ TP ที่ <strong>2454.00</strong> ระยะเสี่ยงคือ 2.00</p>
+      <table class="example-table" aria-label="ผลจำลองของตัวอย่าง Buy"><thead><tr><th scope="col">ปิดที่ราคา</th><th scope="col">ผล</th><th scope="col">เหตุผล</th></tr></thead><tbody>
+        <tr><th scope="row">2448.00</th><td>−1.00R</td><td>ถึง SL</td></tr><tr><th scope="row">2451.00</th><td>+0.50R</td><td>ปิดเอง</td></tr><tr><th scope="row">2454.00</th><td>+2.00R</td><td>ถึง TP</td></tr>
+      </tbody></table>
+      <h3>4. ทบทวนหลังออก</h3>
+      <p>เทียบเหตุผลก่อนเข้ากับสิ่งที่เกิดขึ้น จดว่าจุดเข้าตรงตามแผนหรือไม่ แล้วเลือกหนึ่งอย่างที่จะปรับในการฝึกรอบถัดไป</p>
+      <details><summary>ถ้าแท่งเดียวแตะทั้ง SL และ TP</summary><p>กราฟจำลองมีราคา 4 จุดต่อแท่ง สำหรับออเดอร์ที่เปิดอยู่ หากช่วงราคาในแท่งแตะทั้งสองระดับ ระบบนับ SL ก่อน ส่วนกรณีราคาเปิดกระโดดข้ามระดับ ระบบตรวจราคาเปิดก่อน</p></details>
+      <p><small>อ่านเพิ่มเติมเรื่องโครงสร้างแท่งเทียนที่ <a href="https://www.cmegroup.com/education/courses/technical-analysis/chart-types-candlestick-line-bar" target="_blank" rel="noopener noreferrer">CME Group</a></small></p>
+      <div class="manual-links"><button type="button" data-manual-lesson="candle">ไปบทอ่านแท่งเทียน</button><button type="button" data-manual-lesson="retest">ไปบท Breakout &amp; Retest</button></div>
+    </article>
+    <article id="systemManual" hidden>
+      <h3>1. เข้าสู่ระบบ</h3>
+      <p>ใช้บัญชีเดิมเพื่อลงชื่อเข้าใช้ หรือกด <strong>สมัครบัญชี</strong> เพื่อสร้างบัญชีใหม่ หากลืมรหัสผ่าน ให้กด <strong>ลืมรหัสผ่าน?</strong> กรอกอีเมลที่ใช้สมัคร แล้วกด <strong>ส่งลิงก์รีเซ็ต</strong></p>
+      <h3>2. เลือกบทเรียน</h3>
+      <p>บนคอมพิวเตอร์เลือกจากเมนูด้านซ้าย บนมือถือใช้ช่อง <strong>เลือกบทเรียน</strong> ด้านบน กด <strong>บทถัดไป</strong> เพื่อเรียนเรียงตามลำดับ</p>
+      <h3>3. ดูเทรดจำลอง</h3>
+      <p>ในบทที่ 2 เลือกตัวอย่างออเดอร์และความเร็ว แล้วกด <strong>เล่นตัวอย่าง</strong> ถ้าต้องการดูทีละแท่ง ให้กด <strong>หยุดชั่วคราว</strong> แล้วกด <strong>แท่งถัดไป</strong> เลขสีทองคือแท่งเข้า เลขสีม่วงคือแท่งออก</p>
+      <h3>4. ฝึกเปิดและปิดออเดอร์</h3>
+      <ul>
+        <li><strong>บทที่ 3 ฝึกกับ AI</strong> อ่านสัญญาณ หากมีทิศทาง Buy หรือ Sell ให้กดกรอกแผนจาก AI หากขึ้นให้รอ ให้เปิดแท่งถัดไปเพื่อดูสัญญาณใหม่</li>
+        <li><strong>บทที่ 4 ฝึกเอง</strong> เลือก Buy หรือ Sell กรอก SL และ TP แล้วกดเปิดออเดอร์ที่ราคาปิดล่าสุด</li>
+        <li><strong>ทั้งสองบท</strong> กด <strong>เปิดแท่งถัดไป</strong> เพื่อดูผล หรือกด <strong>ปิดออเดอร์เอง</strong> เมื่อพร้อม ระบบปิดให้เมื่อถึง SL หรือ TP</li>
+      </ul>
+      <h3>5. วางแผนล่วงหน้า</h3>
+      <p>ในบทที่ 6 กรอกราคาเข้า SL และ TP แล้วกด <strong>ล็อกแผน</strong> จากนั้นกด <strong>เปิดแท่งถัดไป</strong> ระบบรอให้ราคาแตะจุดเข้าที่กำหนด</p>
+      <h3>6. บันทึกและกลับมาฝึก</h3>
+      <p>เมื่อจบโจทย์ ให้เขียนสิ่งที่ได้เรียนรู้แล้วกด <strong>บันทึกบทเรียน</strong> ผลฝึกอยู่ใน <strong>สมุดบันทึกผลฝึก</strong> ของบัญชี ปุ่ม <strong>รีเฟรช</strong> โหลดหน้าใหม่และพากลับบทที่ 1</p>
+      <div class="manual-links" id="systemManualLinks"><button type="button" data-manual-lesson="demo">ไปบทดูเทรดจำลอง</button><button type="button" data-manual-lesson="coach">ไปบทฝึกเทรดกับ AI</button></div>
+    </article>
+  </div>
+</dialog></main>
 <script>
 'use strict';
 const $=id=>document.getElementById(id);
@@ -380,6 +465,7 @@ function setup(){
   for(const id of ['trainingNav','trainingScenarios','tradePanel','journalPanel'])$(id).hidden=isDemo();
   for(const id of ['contextPanel','chartQuiz'])$(id).hidden=isDemo()||isCoach();
   $('coachPanel').hidden=!isCoach();
+  $('phoneChartControls').hidden=isDemo();
   for(const id of ['demoControls','demoLegend','demoOrder'])$(id).hidden=!isDemo();
   for(const frame of [5,15]) $('m'+frame).classList.toggle('primary',frame===timeframe);
   update();
@@ -561,6 +647,9 @@ function update(){
   $('lock').textContent=isPractice()?'เปิด '+$('side').value+' ที่ราคาปิด':'ล็อกแผน';
   $('step').disabled=shown>=bars.length||(order?order.state==='done':!isPractice());
   $('exit').disabled=order?.state!=='open';
+  $('chartStep').disabled=$('step').disabled;
+  $('chartExit').disabled=$('exit').disabled;
+  $('phoneTradeStatus').textContent=$('status').textContent;
   $('tradePhase').textContent={pending:'รอราคาเข้า',open:'เปิด '+p.side,done:'จบการฝึก'}[order?.state]||'รอจังหวะเข้า';
   const result=order?.state==='open'?tradeR(b.c):order?.resultR;
   $('tradeMark').textContent=result===undefined?'ราคาปิด '+price(b.c):(order.state==='open'?'ผลลอยตัว ':'ผลปิด ')+formatR(result);
@@ -777,6 +866,19 @@ function switchMode(mode){
   if(activeTraining===null)setup();
   else startTraining(activeTraining);
 }
+function openManual(kind){
+  const trade=kind==='trade';
+  $('manualTitle').textContent=trade?'คู่มือเทรด XAUUSD':'คู่มือใช้งานระบบ';
+  $('tradeManual').hidden=!trade;
+  $('systemManual').hidden=trade;
+  $('systemManualLinks').hidden=!accountUser;
+  if(demoTimer!==null){
+    stopDemo();
+    renderDemo();
+  }
+  $('manualDialog').showModal();
+  $('manualBody').scrollTop=0;
+}
 function switchCase(frame){
   if(order&&order.state!=='done'&&!confirm('ยกเลิกแผนที่กำลังฝึกและเปลี่ยนโจทย์หรือไม่?'))return;
   activeTraining=null;
@@ -784,6 +886,19 @@ function switchCase(frame){
   setup();
 }
 for(const {mode,button} of lessons)$(button).onclick=()=>switchMode(mode);
+$('loginSystemManual').onclick=$('openSystemManual').onclick=()=>openManual('system');
+$('openContextManual').onclick=$('openTradeManual').onclick=()=>openManual('trade');
+$('closeManual').onclick=()=>$('manualDialog').close();
+$('manualDialog').onclick=event=>{
+  const link=event.target.closest('[data-manual-lesson]');
+  if(!link||!accountUser)return;
+  const mode=link.dataset.manualLesson;
+  switchMode(mode);
+  if(trainingMode===mode){
+    $('manualDialog').close();
+    $('workspaceTitle').focus();
+  }
+};
 $('candleExample').onchange=renderCandleExample;
 $('candleQuiz').onsubmit=event=>{
   event.preventDefault();
@@ -867,8 +982,8 @@ $('saveReview').onclick=async()=>{
   const saved=await saveHistory(history[reviewIndex]);
   if(version===accountVersion)$('reviewStatus').textContent=saved?'บันทึกบทเรียนแล้ว':'บันทึกไม่สำเร็จ';
 };
-$('step').onclick=next;
-$('exit').onclick=()=>{if(order?.state==='open')finish('ออกเองที่ราคาปิด',bars[shown-1].c);};
+$('chartStep').onclick=$('step').onclick=next;
+$('chartExit').onclick=$('exit').onclick=()=>{if(order?.state==='open')finish('ออกเองที่ราคาปิด',bars[shown-1].c);};
 $('refreshTraining').onclick=async()=>{
   if(!isDemo()&&order&&order.state!=='done'&&!confirm('รีเฟรชหน้าและยกเลิกออเดอร์ที่กำลังฝึกหรือไม่?'))return;
   if(isDemo()){
@@ -915,6 +1030,7 @@ function setAccountBusy(busy){
 }
 async function showAccount(user){
   if(accountReady&&accountUser?.id===user?.id)return;
+  if(accountReady&&$('manualDialog').open)$('manualDialog').close();
   const version=++accountVersion;
   accountUser=user;
   accountReady=true;
