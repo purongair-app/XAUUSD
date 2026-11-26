@@ -34,6 +34,15 @@ body:has(#loginScreen[hidden]) #loginBackdrop{display:none}
 #tradeMark[data-tone="profit"]{color:#79e6c1}#tradeMark[data-tone="loss"]{color:#ff9b9e}
 #entry[readonly]{color:#f7c66b}
 #practiceHelp,#planHelp{margin:9px 0 12px}
+.demo-controls .row{align-items:end}.demo-controls label{flex:1 1 220px;margin:0}.demo-controls select,.demo-controls button{min-height:44px}
+.demo-actions{display:flex;flex-wrap:wrap;gap:8px}
+.demo-legend{display:flex;gap:14px;flex-wrap:wrap;color:#c4cbd7}
+.demo-legend span::before{content:'';display:inline-block;width:8px;height:8px;border-radius:50%;background:#f7c66b;margin-inline-end:6px}
+.demo-legend span:last-child::before{background:#d0b0ff}
+#demoPhase{padding:9px 11px;border-radius:8px;background:#111721;color:#f7c66b;font-weight:700}
+.demo-order{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:15px 0}.demo-order div{padding:9px 11px;border:1px solid #343d4e;border-radius:8px}
+.demo-order dt{color:#c4cbd7;font-size:.85rem}.demo-order dd{margin:4px 0 0;font-variant-numeric:tabular-nums}.demo-order .event{grid-column:1/-1}
+#demoResult[data-tone="profit"]{color:#79e6c1}#demoResult[data-tone="loss"]{color:#ff9b9e}
 </style>
 <div id="loginBackdrop" aria-hidden="true"><span style="--x:3%;--y:72%;--wick:8%"></span><span style="--x:7.1%;--y:66%;--wick:15%"></span><span class="down" style="--x:11.2%;--y:68%;--wick:14%"></span><span style="--x:15.299999999999999%;--y:58%;--wick:13%"></span><span style="--x:19.4%;--y:53%;--wick:12%"></span><span class="down" style="--x:23.5%;--y:56%;--wick:11%"></span><span style="--x:27.599999999999998%;--y:48%;--wick:10%"></span><span style="--x:31.699999999999996%;--y:42%;--wick:9%"></span><span class="down" style="--x:35.8%;--y:45%;--wick:8%"></span><span style="--x:39.9%;--y:35%;--wick:15%"></span><span style="--x:44%;--y:30%;--wick:14%"></span><span class="down" style="--x:48.099999999999994%;--y:37%;--wick:13%"></span><span class="down" style="--x:52.199999999999996%;--y:40%;--wick:12%"></span><span class="down" style="--x:56.3%;--y:47%;--wick:11%"></span><span style="--x:60.39999999999999%;--y:41%;--wick:10%"></span><span style="--x:64.5%;--y:32%;--wick:9%"></span><span style="--x:68.6%;--y:25%;--wick:8%"></span><span class="down" style="--x:72.69999999999999%;--y:28%;--wick:15%"></span><span style="--x:76.8%;--y:18%;--wick:14%"></span><span class="down" style="--x:80.89999999999999%;--y:20%;--wick:13%"></span><span style="--x:85%;--y:12%;--wick:12%"></span><span class="down" style="--x:89.1%;--y:15%;--wick:11%"></span><span style="--x:93.19999999999999%;--y:8%;--wick:10%"></span><span class="down" style="--x:97.3%;--y:11%;--wick:9%"></span></div><main><section id="loginScreen" aria-label="เข้าสู่ระบบ Trading Lab">
 <p class="brand">XAUUSD TRADING LAB</p>
@@ -62,9 +71,13 @@ body:has(#loginScreen[hidden]) #loginBackdrop{display:none}
 <p id="forgotBackRow" class="signup-row" hidden><button type="button" class="account-link" id="forgotBack">กลับไปเข้าสู่ระบบ</button></p>
 <form id="recoveryForm" hidden><label>รหัสผ่านใหม่<input id="newPassword" type="password" autocomplete="new-password" minlength="8" required></label><button class="login-primary" id="savePassword">บันทึกรหัสผ่านใหม่</button></form>
 <output id="accountStatus" aria-live="polite"></output></section><div id="trainingScreen" hidden inert><div id="signedIn" hidden><p id="accountName"></p><button type="button" id="signOut">ออกจากระบบ</button></div><output id="trainingAccountStatus" aria-live="polite"></output><header><h1>XAUUSD Trading Lab</h1><p>ฝึกอ่านแท่งเทียน วางแผนเข้าออก และทดสอบแผนด้วยข้อมูลจำลอง</p></header>
-<nav class="training-modes" aria-label="โหมดฝึกเทรด"><button type="button" id="practiceMode" aria-pressed="true">ฝึกเข้า–ออกออเดอร์</button><button type="button" id="planMode" aria-pressed="false">วางแผนล่วงหน้า</button></nav>
-<div class="row training-nav"><button id="m5">M5</button><button id="m15">M15</button><button id="newCase">โจทย์ถัดไป</button></div>
-<section><h2>อ่านกราฟก่อนวางแผน</h2>
+<nav class="training-modes" aria-label="โหมดฝึกเทรด"><button type="button" id="watchMode" aria-pressed="false">ดูเทรดจำลอง</button><button type="button" id="practiceMode" aria-pressed="true">ฝึกเข้า–ออกออเดอร์</button><button type="button" id="planMode" aria-pressed="false">วางแผนล่วงหน้า</button></nav>
+<section class="demo-controls" id="demoControls" hidden aria-label="ควบคุมการเล่นตัวอย่าง">
+<div class="row"><label>ตัวอย่างออเดอร์<select id="demoScenario"><option value="0">Buy แล้วปิดที่ Take Profit</option><option value="1">Sell แล้วปิดที่ Stop Loss</option><option value="2">Buy แล้วปิดก่อนถึงเป้า</option></select></label>
+<div class="demo-actions"><button type="button" class="primary" id="demoPlay">เล่นตัวอย่าง</button><button type="button" id="demoStep">แท่งถัดไป</button><button type="button" id="demoReset" disabled>เริ่มใหม่</button></div></div>
+</section>
+<div class="row training-nav" id="trainingNav"><button id="m5">M5</button><button id="m15">M15</button><button id="newCase">โจทย์ถัดไป</button></div>
+<section id="contextPanel"><h2>อ่านกราฟก่อนวางแผน</h2>
 <p id="context"></p>
 <details id="guide"><summary>เปิดคู่มือวางแผนและทบทวน</summary>
 <ol>
@@ -74,11 +87,16 @@ body:has(#loginScreen[hidden]) #loginBackdrop{display:none}
 <li><strong>เลือกข้ามได้</strong> หากอ่านโครงสร้างยังไม่ชัดหรือจุดออกอยู่ใกล้เกินไปเมื่อเทียบกับระยะ SL ให้จดเหตุผลและข้ามโจทย์</li>
 <li><strong>ทบทวนหลังออก</strong> เทียบผลเป็น R กับสิ่งที่เห็นก่อนเปิดแท่งถัดไป แล้วจดหนึ่งอย่างที่จะปรับในการฝึกรอบหน้า</li>
 </ol></details></section>
-<section><h2>แบบฝึกจำลอง 3 สถานการณ์</h2>
+<section id="trainingScenarios"><h2>แบบฝึกจำลอง 3 สถานการณ์</h2>
 <div class="row"><button type="button" data-training="0">1 · Buy หลังราคาฟื้น</button><button type="button" data-training="1">2 · Sell หลังราคาย่อลง</button><button type="button" data-training="2">3 · ราคาแกว่งในกรอบ</button></div>
 <output id="trainingHint" aria-live="polite">เลือกโจทย์เพื่อเริ่มฝึก ระบบจะกรอกแผนตัวอย่างให้ในโจทย์ Buy และ Sell</output></section>
-<div class="layout"><section><h2 id="caption"></h2><canvas id="chart" aria-label="กราฟแท่งเทียนทองคำจำลอง"></canvas><p id="ohlc"></p><label>อ่านแท่งที่ 32 ก่อนเปิดเฉลย<select id="answer"><option value="">เลือกคำตอบ</option><option value="bull">ไส้ล่างยาวและราคาปิดเหนือราคาเปิด</option><option value="bear">ไส้บนยาวและราคาปิดต่ำกว่าราคาเปิด</option><option value="flat">ตัวแท่งสั้นและมีไส้ทั้งสองด้าน</option></select></label><button id="check">ตรวจคำตอบ</button><output id="lesson" aria-live="polite"></output></section>
-<section><h2 id="tradeTitle">ฝึกเข้า–ออกออเดอร์</h2><form id="plan">
+<div class="layout"><section><h2 id="caption"></h2><canvas id="chart" aria-label="กราฟแท่งเทียนทองคำจำลอง"></canvas><p id="ohlc"></p>
+<div class="demo-legend" id="demoLegend" hidden><span>จุดเข้า</span><span>จุดออก</span></div>
+<div id="chartQuiz"><label>อ่านแท่งที่ 32 ก่อนเปิดเฉลย<select id="answer"><option value="">เลือกคำตอบ</option><option value="bull">ไส้ล่างยาวและราคาปิดเหนือราคาเปิด</option><option value="bear">ไส้บนยาวและราคาปิดต่ำกว่าราคาเปิด</option><option value="flat">ตัวแท่งสั้นและมีไส้ทั้งสองด้าน</option></select></label><button id="check">ตรวจคำตอบ</button><output id="lesson" aria-live="polite"></output></div></section>
+<section id="demoOrder" hidden aria-labelledby="demoTitle"><h2 id="demoTitle">ออเดอร์จำลอง</h2><output id="demoPhase" aria-live="polite"></output>
+<dl class="demo-order"><div class="event"><dt>เข้าออเดอร์</dt><dd id="demoEntry">—</dd></div><div><dt>Stop Loss (SL)</dt><dd id="demoSL">—</dd></div><div><dt>Take Profit (TP)</dt><dd id="demoTP">—</dd></div><div class="event"><dt>ออกออเดอร์</dt><dd id="demoExit">—</dd></div><div class="event"><dt>ผลเทียบกับความเสี่ยง (R)</dt><dd id="demoResult">—</dd></div></dl>
+<p id="demoReason"></p></section>
+<section id="tradePanel"><h2 id="tradeTitle">ฝึกเข้า–ออกออเดอร์</h2><form id="plan">
 <div id="tradeState"><strong id="tradePhase">รอจังหวะเข้า</strong><small id="tradeMark"></small></div>
 <p id="practiceHelp"><small>เปิดกราฟทีละแท่งเพื่อรอจังหวะ เมื่อพร้อมให้เลือก Buy หรือ Sell แล้วตั้ง SL และ TP ระบบจำลองราคาเข้าจากราคาปิดแท่งที่เห็น</small></p>
 <p id="planHelp" hidden><small>กรอกระดับราคาทอง เช่น 2450.02 แผนจะเปิดออเดอร์เมื่อแท่งถัดไปแตะราคาเข้า</small></p>
@@ -94,7 +112,7 @@ body:has(#loginScreen[hidden]) #loginBackdrop{display:none}
 <button type="button" id="skip">บันทึกข้ามโจทย์</button>
 <div id="review" hidden><label>บทเรียนหลังจบโจทย์<textarea id="reflection" maxlength="400"></textarea></label><button id="saveReview" type="button">บันทึกบทเรียน</button><output id="reviewStatus" aria-live="polite"></output></div>
 </section></div>
-<section><h2>สมุดบันทึกผลฝึก</h2><small>สมุดบันทึกออนไลน์ของบัญชีนี้</small><ol id="journal"></ol></section></div></main>
+<section id="journalPanel"><h2>สมุดบันทึกผลฝึก</h2><small>สมุดบันทึกออนไลน์ของบัญชีนี้</small><ol id="journal"></ol></section></div></main>
 <script>
 'use strict';
 const $=id=>document.getElementById(id);
@@ -107,8 +125,15 @@ const training=[
   {side:'Sell',hint:'อ่านไส้บนของแท่ง 32 แล้วดูแผน Sell กดล็อกแผนและเปิดแท่งถัดไปทีละแท่ง'},
   {side:null,hint:'แท่ง 32 เปิดและปิดใกล้กัน ลองตรวจคำตอบ แล้วจดเหตุผลว่าทำไมจึงจะรอ ก่อนกดบันทึกข้ามโจทย์'}
 ];
+const demos=[
+  {exercise:0,side:'Buy',signal:'แท่ง 32 มีไส้ล่างยาวและปิดเหนือราคาเปิด ตัวอย่างจึงเปิด Buy ที่ราคาปิด'},
+  {exercise:1,side:'Sell',signal:'แท่ง 32 มีไส้บนยาวและปิดต่ำกว่าราคาเปิด ตัวอย่างจึงเปิด Sell ที่ราคาปิด'},
+  {exercise:0,side:'Buy',signal:'แท่ง 32 ฟื้นจากจุดต่ำ ตัวอย่างเปิด Buy แล้วสาธิตการปิดที่ราคาปิดของแท่งถัดไป',closeEarly:true}
+];
 let activeTraining=null;
-let practiceMode=true;
+let trainingMode='practice', previousTraining=null, demoTimer=null;
+const isPractice=()=>trainingMode==='practice';
+const isDemo=()=>trainingMode==='demo';
 let accountClient=null, accountUser=null, accountReady=false, accountVersion=0;
 let pendingSave=Promise.resolve();
 const sampleButtons=['sampleBuy','sampleSell'];
@@ -142,13 +167,14 @@ function setup(){
   ['entry','sl','tp','answer','thesis','reflection'].forEach(id=>$(id).value='');
   $('lesson').textContent='';$('status').textContent='';
   reviewIndex=-1;$('review').hidden=true;$('reviewStatus').textContent='';
-  $('entry').readOnly=practiceMode;
-  $('entryLabel').textContent=practiceMode?'ราคาเข้า (ราคาปิดล่าสุด)':'ราคาเข้า';
-  $('tradeTitle').textContent=practiceMode?'ฝึกเข้า–ออกออเดอร์':'แผนเข้าและออก';
-  $('practiceHelp').hidden=!practiceMode;
-  $('planHelp').hidden=practiceMode;
-  $('practiceMode').setAttribute('aria-pressed',String(practiceMode));
-  $('planMode').setAttribute('aria-pressed',String(!practiceMode));
+  $('entry').readOnly=isPractice();
+  $('entryLabel').textContent=isPractice()?'ราคาเข้า (ราคาปิดล่าสุด)':'ราคาเข้า';
+  $('tradeTitle').textContent=isPractice()?'ฝึกเข้า–ออกออเดอร์':'แผนเข้าและออก';
+  $('practiceHelp').hidden=!isPractice();
+  $('planHelp').hidden=isPractice();
+  for(const [id,mode] of [['watchMode','demo'],['practiceMode','practice'],['planMode','plan']])$(id).setAttribute('aria-pressed',String(trainingMode===mode));
+  for(const id of ['trainingNav','contextPanel','trainingScenarios','chartQuiz','tradePanel','journalPanel'])$(id).hidden=isDemo();
+  for(const id of ['demoControls','demoLegend','demoOrder'])$(id).hidden=!isDemo();
   for(const frame of [5,15]) $('m'+frame).classList.toggle('primary',frame===timeframe);
   update();
 }
@@ -170,7 +196,7 @@ function fillSample(side){
   $('sl').value=price(sl);
   $('tp').value=price(tp);
   $('thesis').value='ตัวอย่างฝึกกรอก ใช้ราคาปิดแท่งล่าสุดเป็นจุดเข้า ตั้ง SL ห่าง '+price(distance)+' และ TP ห่าง '+price(distance*2)+' เพื่อฝึกอ่านอัตราส่วน 1 ต่อ 2';
-  $('status').textContent=practiceMode?'กรอกตัวอย่างแล้ว ปรับ SL และ TP ได้ก่อนเปิดออเดอร์':'กรอกตัวอย่างแล้ว ปรับราคาได้ก่อนกดล็อกแผน';
+  $('status').textContent=isPractice()?'กรอกตัวอย่างแล้ว ปรับ SL และ TP ได้ก่อนเปิดออเดอร์':'กรอกตัวอย่างแล้ว ปรับราคาได้ก่อนกดล็อกแผน';
   update();
 }
 function startTraining(index){
@@ -180,17 +206,21 @@ function startTraining(index){
   timeframe=5;
   setup();
   const {side}=training[index];
-  if(practiceMode)$('trainingHint').textContent=[
+  if(isPractice())$('trainingHint').textContent=[
     'อ่านการฟื้นตัวในแท่ง 32 แล้วฝึกเข้า Buy หรือรอให้เห็นแท่งยืนยัน',
     'อ่านแรงขายในแท่ง 32 แล้วฝึกเข้า Sell พร้อมเลือกว่าจะปิดเองหรือรอ SL/TP',
     'ราคายังแกว่งในกรอบ ลองรอดูแท่งถัดไป หรือบันทึกเหตุผลที่เลือกข้าม'
   ][index];
   if(!side){
-    if(!practiceMode)$('thesis').value='ตัวแท่งสั้นและมีไส้สองด้าน ขอรอให้ราคาปิดพ้นกรอบก่อนพิจารณาแผนใหม่';
+    if(!isPractice())$('thesis').value='ตัวแท่งสั้นและมีไส้สองด้าน ขอรอให้ราคาปิดพ้นกรอบก่อนพิจารณาแผนใหม่';
     return;
   }
-  if(!practiceMode)fillSample(side);
+  if(!isPractice())fillSample(side);
   else $('side').value=side;
+  shapeExample(side);
+  update();
+}
+function shapeExample(side){
   const p=samplePlan(side);
   const risk=Math.abs(p.entry-p.sl);
   const sign=side==='Buy'?1:-1;
@@ -203,7 +233,6 @@ function startTraining(index){
   for(const bar of bars.slice(34)){
     for(const field of ['o','c','h','l'])bar[field]=round(bar[field]+shift);
   }
-  update();
 }
 function readPlan(){
   return {side:$('side').value, entry:$('entry').valueAsNumber, sl:$('sl').valueAsNumber, tp:$('tp').valueAsNumber};
@@ -228,13 +257,20 @@ function readContext(){
 }
 function update(){
   const b=bars[shown-1];
-  if(practiceMode&&!order)$('entry').value=price(b.c);
-  $('caption').textContent='XAUUSD · M'+timeframe+' · โจทย์ '+(exercise+1)+' · แท่ง '+shown+'/'+bars.length;
+  const label=isDemo()?'ตัวอย่างเทรด':'โจทย์ '+(exercise+1);
+  $('caption').textContent='XAUUSD · M'+timeframe+' · '+label+' · แท่ง '+shown;
   $('ohlc').textContent='แท่งล่าสุด  เปิด '+price(b.o)+'  สูง '+price(b.h)+'  ต่ำ '+price(b.l)+'  ปิด '+price(b.c);
+  if(isDemo()){
+    renderDemo();
+    draw();
+    return;
+  }
+  $('caption').textContent+='/'+bars.length;
+  if(isPractice()&&!order)$('entry').value=price(b.c);
   const p=order||readPlan();
   $('rr').textContent=valid(p)?'ความเสี่ยงต่อผลตอบแทน 1 : '+(Math.abs(p.tp-p.entry)/Math.abs(p.entry-p.sl)).toFixed(2):'Buy: SL < เข้า < TP  •  Sell: TP < เข้า < SL';
-  $('lock').textContent=practiceMode?'เปิด '+$('side').value+' ที่ราคาปิด':'ล็อกแผน';
-  $('step').disabled=shown>=bars.length||(order?order.state==='done':!practiceMode);
+  $('lock').textContent=isPractice()?'เปิด '+$('side').value+' ที่ราคาปิด':'ล็อกแผน';
+  $('step').disabled=shown>=bars.length||(order?order.state==='done':!isPractice());
   $('exit').disabled=order?.state!=='open';
   $('tradePhase').textContent={pending:'รอราคาเข้า',open:'เปิด '+p.side,done:'จบการฝึก'}[order?.state]||'รอจังหวะเข้า';
   const result=order?.state==='open'?tradeR(b.c):order?.resultR;
@@ -249,7 +285,7 @@ function draw(){
   const dpr=window.devicePixelRatio||1;
   canvas.width=w*dpr;canvas.height=h*dpr;
   const ctx=canvas.getContext('2d');ctx.scale(dpr,dpr);
-  const visible=bars.slice(Math.max(0,shown-32),shown), p=order||readPlan();
+  const visible=bars.slice(Math.max(0,shown-32),shown), p=order||(isDemo()?{}:readPlan());
   const low=Math.min(...visible.map(b=>b.l)),high=Math.max(...visible.map(b=>b.h));
   const span=Math.max(.1,high-low), margin=span*.13, chartW=w-62;
   const y=n=>10+(high+margin-n)/(span+margin*2)*(h-35);
@@ -273,7 +309,7 @@ function draw(){
   for(const [index,level,color] of [[order?.entryBar,order?.entry,'#f7c66b'],[order?.exitBar,order?.closedAt,'#d0b0ff']]){
     const offset=index-(shown-visible.length+1),pos=y(level);
     if(!(offset>=0&&offset<visible.length&&pos>=10&&pos<=h-25))continue;
-    ctx.beginPath();ctx.arc(width*(offset+.5),pos,4,0,2*Math.PI);
+    ctx.beginPath();ctx.arc(width*(offset+.5),pos,isDemo()?6:4,0,2*Math.PI);
     ctx.fillStyle=color;ctx.fill();ctx.strokeStyle='#101319';ctx.stroke();
   }
 }
@@ -283,7 +319,12 @@ function tradeR(closedAt){
 function finish(reason, closedAt){
   if(!order||order.state==='done')return;
   order.state='done';
-  if(closedAt!==undefined)Object.assign(order,{closedAt,exitBar:shown,resultR:tradeR(closedAt)});
+  if(closedAt!==undefined)Object.assign(order,{closedAt,exitBar:shown,resultR:tradeR(closedAt),exitReason:reason});
+  if(isDemo()){
+    stopDemo();
+    update();
+    return;
+  }
   const result=closedAt===undefined?reason:reason+' ที่ '+price(closedAt)+' · แท่ง '+shown+' · '+formatR(order.resultR);
   const entryLabel=order.entryBar?' (แท่ง '+order.entryBar+')':'';
   $('status').textContent=result;
@@ -291,7 +332,7 @@ function finish(reason, closedAt){
   update();
 }
 function recordResult(result,thesis){
-  history.unshift({id:crypto.randomUUID(),summary:(practiceMode?'ฝึกเข้า–ออก · ':'')+'M'+timeframe+' · โจทย์ '+(exercise+1)+' · '+result,thesis});
+  history.unshift({id:crypto.randomUUID(),summary:(isPractice()?'ฝึกเข้า–ออก · ':'')+'M'+timeframe+' · โจทย์ '+(exercise+1)+' · '+result,thesis});
   history=history.slice(0,50);
   reviewIndex=0;
   $('review').hidden=false;
@@ -316,7 +357,7 @@ function saveHistory(record){
   return false;
 }
 function next(){
-  if(shown>=bars.length||order?.state==='done'||(!order&&!practiceMode))return;
+  if(shown>=bars.length||order?.state==='done'||(!order&&!isPractice()))return;
   const b=bars[shown++],p=order;
   if(!p){
     if(shown===bars.length)finishWithoutOrder('จบโจทย์โดยไม่เปิดออเดอร์');
@@ -353,11 +394,65 @@ function next(){
   }
   update();
 }
-function switchMode(toPractice){
-  if(practiceMode===toPractice)return;
-  if(order&&order.state!=='done'&&!confirm('ยกเลิกออเดอร์จำลองและเปลี่ยนโหมดฝึกหรือไม่?'))return;
-  practiceMode=toPractice;
+function currentDemo(){
+  return demos[Number($('demoScenario').value)]||demos[0];
+}
+function stopDemo(){
+  if(demoTimer!==null)clearInterval(demoTimer);
+  demoTimer=null;
+}
+function setupDemo(){
+  stopDemo();
+  const example=currentDemo();
+  activeTraining=null;
+  exercise=example.exercise;
+  timeframe=5;
+  setup();
+  shapeExample(example.side);
+  shown=31;
+  update();
+}
+function renderDemo(){
+  const done=order?.state==='done', running=demoTimer!==null;
+  const phase=done?'ปิดออเดอร์แล้ว':order?'ถือออเดอร์ '+order.side:'รอแท่งสัญญาณเข้า';
+  if($('demoPhase').textContent!==phase)$('demoPhase').textContent=phase;
+  $('demoPlay').textContent=running?'หยุดชั่วคราว':done?'เล่นอีกครั้ง':order?'เล่นต่อ':'เล่นตัวอย่าง';
+  $('demoStep').disabled=running||done;
+  $('demoReset').disabled=!running&&!order;
+  $('demoEntry').textContent=order?order.side+' · '+price(order.entry)+' · แท่ง '+order.entryBar:'—';
+  $('demoSL').textContent=order?price(order.sl):'—';
+  $('demoTP').textContent=order?price(order.tp):'—';
+  $('demoExit').textContent=done?price(order.closedAt)+' · แท่ง '+order.exitBar+' · '+order.exitReason:'—';
+  const result=done?order.resultR:order?tradeR(bars[shown-1].c):undefined;
+  $('demoResult').textContent=result===undefined?'—':(done?'':'ลอยตัว ')+formatR(result);
+  $('demoResult').dataset.tone=result>0?'profit':result<0?'loss':'';
+  $('demoReason').textContent=order?currentDemo().signal:'รอให้แท่ง 32 ปิด แล้วดูราคาเปิดออเดอร์บนกราฟ';
+}
+function stepDemo(){
+  if(!isDemo()||order?.state==='done')return;
+  const example=currentDemo();
+  if(!order){
+    shown++;
+    const {entry,sl,tp}=samplePlan(example.side);
+    order={side:example.side,entry,sl,tp,state:'open',entryBar:shown};
+    update();
+    return;
+  }
+  next();
+  if(example.closeEarly&&order.state==='open')finish('ปิดก่อนถึงเป้า',bars[shown-1].c);
+}
+function switchMode(mode){
+  if(trainingMode===mode)return;
+  if(!isDemo()&&order&&order.state!=='done'&&!confirm('ยกเลิกออเดอร์จำลองและเปลี่ยนโหมดฝึกหรือไม่?'))return;
+  stopDemo();
+  if(isDemo())({timeframe,exercise,activeTraining}=previousTraining);
+  trainingMode=mode;
   order=null;
+  if(isDemo()){
+    previousTraining={timeframe,exercise,activeTraining};
+    setupDemo();
+    return;
+  }
   if(activeTraining===null)setup();
   else startTraining(activeTraining);
 }
@@ -367,8 +462,20 @@ function switchCase(frame){
   if(frame!==undefined)timeframe=frame;else exercise++;
   setup();
 }
-$('practiceMode').onclick=()=>switchMode(true);
-$('planMode').onclick=()=>switchMode(false);
+$('watchMode').onclick=()=>switchMode('demo');
+$('practiceMode').onclick=()=>switchMode('practice');
+$('planMode').onclick=()=>switchMode('plan');
+$('demoScenario').onchange=setupDemo;
+$('demoReset').onclick=setupDemo;
+$('demoStep').onclick=stepDemo;
+$('demoPlay').onclick=()=>{
+  if(demoTimer!==null)stopDemo();
+  else{
+    if(order?.state==='done')setupDemo();
+    demoTimer=setInterval(stepDemo,1600);
+  }
+  renderDemo();
+};
 $('newCase').onclick=()=>switchCase();
 $('m5').onclick=()=>{if(timeframe!==5)switchCase(5);};
 $('m15').onclick=()=>{if(timeframe!==15)switchCase(15);};
@@ -386,12 +493,12 @@ $('sampleSell').onclick=()=>fillSample('Sell');
 $('plan').oninput=update;
 $('plan').onsubmit=event=>{
   event.preventDefault();
-  if(order||shown>=bars.length)return;
+  if(isDemo()||order||shown>=bars.length)return;
   const p=readPlan();
   if(!valid(p)){$('status').textContent='ตรวจลำดับราคาเข้า SL และ TP ตามทิศทางที่เลือก';return;}
-  order={...p,state:practiceMode?'open':'pending',entryBar:practiceMode?shown:undefined,thesis:$('thesis').value.trim()};
+  order={...p,state:isPractice()?'open':'pending',entryBar:isPractice()?shown:undefined,thesis:$('thesis').value.trim()};
   setPlanLocked(true);
-  $('status').textContent=practiceMode?'เปิด '+p.side+' ที่ '+price(p.entry)+' · เปิดแท่งถัดไปหรือกดปิดออเดอร์เอง':'ล็อกแผนแล้ว เปิดแท่งถัดไปเพื่อเริ่มจำลอง';
+  $('status').textContent=isPractice()?'เปิด '+p.side+' ที่ '+price(p.entry)+' · เปิดแท่งถัดไปหรือกดปิดออเดอร์เอง':'ล็อกแผนแล้ว เปิดแท่งถัดไปเพื่อเริ่มจำลอง';
   update();
 };
 function finishWithoutOrder(reason){
@@ -453,7 +560,10 @@ async function showAccount(user){
   accountReady=true;
   history=[];
   activeTraining=null;
-  practiceMode=true;
+  stopDemo();
+  trainingMode='practice';
+  previousTraining=null;
+  $('demoScenario').value='0';
   timeframe=5;
   exercise=0;
   $('side').value='Buy';
