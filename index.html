@@ -1,0 +1,221 @@
+<!doctype html><html lang="th"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>XAUUSD Trading Lab</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#101319;color:#ebedf2;font:16px system-ui,sans-serif}main{max-width:1120px;margin:auto;padding:24px}h1{font-size:clamp(28px,5vw,45px);margin:0;color:#f7c66b}h2{font-size:19px;margin:0 0 12px}p{line-height:1.55;color:#bfc6d3}section{background:#1a1f29;border:1px solid #343b49;border-radius:16px;padding:18px;margin-top:16px}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:end}.layout{display:grid;grid-template-columns:2fr 1fr;gap:16px}button,input,select{font:inherit;color:inherit;background:#252d3b;border:1px solid #56617a;border-radius:8px;padding:9px}button{cursor:pointer}button.primary{background:#f7c66b;color:#172030;border-color:#f7c66b;font-weight:700}button:disabled{opacity:.5;cursor:default}label{display:grid;gap:5px;margin:8px 0}input,select{width:100%}canvas{width:100%;height:340px;display:block}small{color:#c4cbd7}output{display:block;margin-top:12px;line-height:1.6}summary{cursor:pointer;font-weight:700;color:#f7c66b}textarea{width:100%;min-height:70px;resize:vertical;font:inherit;color:inherit;background:#252d3b;border:1px solid #56617a;border-radius:8px;padding:9px}ol{padding-left:24px}li{margin:8px 0}@media(max-width:760px){.layout{grid-template-columns:1fr;gap:0}main{padding:14px}canvas{height:290px}}
+</style>
+<main><header><h1>XAUUSD Trading Lab</h1><p>ฝึกอ่านแท่งเทียน วางแผนเข้าออก และทดสอบแผนด้วยข้อมูลจำลอง</p></header>
+<div class="row"><button id="m5">M5</button><button id="m15">M15</button><button id="newCase">โจทย์ถัดไป</button></div>
+<section><h2>อ่านกราฟก่อนวางแผน</h2>
+<p id="context"></p>
+<details id="guide"><summary>เปิดคู่มือวางแผนและทบทวน</summary>
+<ol>
+<li><strong>ดูโครงสร้างบน M15</strong> มองหายอดและฐานที่ยกสูงขึ้น ลดต่ำลง หรือยังสลับกันในกรอบ แล้วทำเครื่องหมายบริเวณยอดและฐานเดิม</li>
+<li><strong>หาจังหวะบน M5</strong> ฝึกสังเกตว่าราคาทดสอบระดับเดิมแล้วปิดกลับเข้ากรอบ หรือทะลุระดับแล้วกลับมาทดสอบจากอีกด้าน อ่านไส้เทียนพร้อมตำแหน่งที่เกิด</li>
+<li><strong>กำหนดราคาเข้าและเงื่อนไขยกเลิกแผน</strong> ระบุว่าจะรอราคาใดและอะไรทำให้มุมมองใช้ไม่ได้ จากนั้นวาง SL ตามระดับนั้น และเลือก TP จากบริเวณที่ต้องการออก</li>
+<li><strong>เลือกข้ามได้</strong> หากอ่านโครงสร้างยังไม่ชัดหรือจุดออกอยู่ใกล้เกินไปเมื่อเทียบกับระยะ SL ให้จดเหตุผลและข้ามโจทย์</li>
+<li><strong>ทบทวนหลังออก</strong> เทียบผลเป็น R กับสิ่งที่เห็นก่อนเปิดแท่งถัดไป แล้วจดหนึ่งอย่างที่จะปรับในการฝึกรอบหน้า</li>
+</ol></details></section>
+<div class="layout"><section><h2 id="caption"></h2><canvas id="chart" aria-label="กราฟแท่งเทียนทองคำจำลอง"></canvas><p id="ohlc"></p><label>อ่านแท่งที่ 32 ก่อนเปิดเฉลย<select id="answer"><option value="">เลือกคำตอบ</option><option value="bull">ไส้ล่างยาวและราคาปิดเหนือราคาเปิด</option><option value="bear">ไส้บนยาวและราคาปิดต่ำกว่าราคาเปิด</option><option value="flat">ตัวแท่งสั้นและมีไส้ทั้งสองด้าน</option></select></label><button id="check">ตรวจคำตอบ</button><output id="lesson" aria-live="polite"></output></section>
+<section><h2>แผนเข้าและออก</h2><form id="plan">
+<label>ทิศทาง<select id="side"><option>Buy</option><option>Sell</option></select></label>
+<label>ราคาเข้า<input id="entry" type="number" step=".01" min=".01" required></label>
+<label>Stop Loss (SL)<input id="sl" type="number" step=".01" min=".01" required></label>
+<label>Take Profit (TP)<input id="tp" type="number" step=".01" min=".01" required></label>
+<label>เหตุผลก่อนเข้า <textarea id="thesis" maxlength="400" placeholder="โครงสร้าง M15 · สัญญาณ M5 · ระดับที่ทำให้แผนใช้ไม่ได้"></textarea></label>
+<output id="rr"></output><p><small>ราคาเข้าจะทำงานเมื่อแท่งถัดไปแตะระดับที่กำหนด กรณีแตะหลายระดับในแท่งเดียว ระบบใช้สมมติฐานตามที่แสดงในผล</small></p>
+<div class="row"><button class="primary" id="lock">ล็อกแผน</button><button type="button" id="step" disabled>เปิดแท่งถัดไป</button><button type="button" id="exit" disabled>ออกที่ราคาปิด</button></div>
+</form><output id="status" aria-live="polite"></output>
+<button type="button" id="skip">บันทึกข้ามโจทย์</button>
+<div id="review" hidden><label>บทเรียนหลังจบโจทย์<textarea id="reflection" maxlength="400"></textarea></label><button id="saveReview" type="button">บันทึกบทเรียน</button><output id="reviewStatus" aria-live="polite"></output></div>
+</section></div>
+<section><h2>สมุดบันทึกผลฝึก</h2><small>เก็บในเบราว์เซอร์เครื่องนี้เมื่อเปิดใช้พื้นที่จัดเก็บได้</small><ol id="journal"></ol></section></main>
+<script>
+'use strict';
+const $=id=>document.getElementById(id);
+const fields=['side','entry','sl','tp','thesis'];
+const round=n=>Math.round(n*100)/100;
+const price=n=>n.toFixed(2);
+let timeframe=5, exercise=0, bars=[], shown, order, pattern, history=[], reviewIndex=-1;
+try { history=JSON.parse(localStorage.getItem('xau-lab-v1') || '[]'); if(!Array.isArray(history)) history=[]; } catch {}
+function renderHistory(){
+  $('journal').replaceChildren();
+  for(const record of history){
+    const item=document.createElement('li'); item.textContent=typeof record==='string'?record:[record.summary,record.thesis&&'เหตุผล: '+record.thesis,record.reflection&&'บทเรียน: '+record.reflection].filter(Boolean).join(' | '); $('journal').append(item);
+  }
+  if(!history.length){const item=document.createElement('li');item.textContent='ยังไม่มีผลฝึก';$('journal').append(item);}
+}
+function setup(){
+  const scale=timeframe===15?1.7:1;
+  let seed=12457+exercise*107+timeframe*197;
+  const random=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};
+  let close=2450+exercise%20*3;
+  bars=Array.from({length:48},(_,i)=>{
+    let o=close;
+    close=round(o+(Math.sin(i/4+exercise)*.65+(random()-.5)*3)*scale);
+    return {o,c:close,h:round(Math.max(o,close)+(.2+random())*scale),l:round(Math.min(o,close)-(.2+random())*scale)};
+  });
+  const last=bars[31], k=last.o;
+  pattern=['bull','bear','flat'][exercise%3];
+  const offsets={bull:[.48,.68,-2.4],bear:[-.48,2.4,-.68],flat:[.05,1.1,-1.1]}[pattern];
+  [last.c,last.h,last.l]=offsets.map(value=>round(k+value*scale));
+  const shift=last.c-bars[32].o;
+  for(const bar of bars.slice(32)) for(const field of ['o','c','h','l']) bar[field]=round(bar[field]+shift);
+  shown=32;order=null;
+  for(const id of fields) $(id).disabled=false;
+  ['entry','sl','tp','answer','thesis','reflection'].forEach(id=>$(id).value='');
+  $('lesson').textContent='';$('status').textContent='';
+  reviewIndex=-1;$('review').hidden=true;$('reviewStatus').textContent='';$('skip').disabled=false;
+  $('lock').disabled=false;$('step').disabled=true;$('exit').disabled=true;
+  for(const frame of [5,15]) $('m'+frame).classList.toggle('primary',frame===timeframe);
+  update();
+}
+function readPlan(){
+  return {side:$('side').value, entry:$('entry').valueAsNumber, sl:$('sl').valueAsNumber, tp:$('tp').valueAsNumber};
+}
+function valid(p){
+  const {entry,sl,tp,side}=p;
+  return [entry,sl,tp].every(n=>Number.isFinite(n)&&n>0) && (side==='Buy'?sl<entry&&entry<tp:tp<entry&&entry<sl);
+}
+function readContext(){
+  const closed=bars.slice(0,shown);
+  const groups=[];
+  if(timeframe===15) groups.push(...closed);
+  else for(let i=2;i+2<closed.length;i+=3){
+    const chunk=closed.slice(i,i+3);
+    groups.push({h:Math.max(...chunk.map(b=>b.h)),l:Math.min(...chunk.map(b=>b.l))});
+  }
+  const recent=groups.slice(-8);
+  const range=part=>({high:Math.max(...part.map(b=>b.h)),low:Math.min(...part.map(b=>b.l))});
+  const earlier=range(recent.slice(0,4)),latest=range(recent.slice(4));
+  const observation=latest.high>earlier.high&&latest.low>earlier.low?'กรอบล่าสุดมีทั้งจุดสูงและจุดต่ำสูงขึ้น':latest.high<earlier.high&&latest.low<earlier.low?'กรอบล่าสุดมีทั้งจุดสูงและจุดต่ำต่ำลง':'จุดสูงและจุดต่ำยังไม่ขยับไปทางเดียวกัน';
+  $('context').textContent='M15 · เปรียบเทียบแท่งที่ปิดแล้ว 4 แท่งก่อนหน้า ('+price(earlier.low)+'–'+price(earlier.high)+') กับ 4 แท่งล่าสุด ('+price(latest.low)+'–'+price(latest.high)+') · '+observation;
+}
+function update(){
+  const b=bars[shown-1];
+  $('caption').textContent='XAUUSD · M'+timeframe+' · โจทย์ '+(exercise+1)+' · แท่ง '+shown+'/'+bars.length;
+  $('ohlc').textContent='แท่งล่าสุด  เปิด '+price(b.o)+'  สูง '+price(b.h)+'  ต่ำ '+price(b.l)+'  ปิด '+price(b.c);
+  const p=order||readPlan();
+  $('rr').textContent=valid(p)?'ความเสี่ยงต่อผลตอบแทน 1 : '+(Math.abs(p.tp-p.entry)/Math.abs(p.entry-p.sl)).toFixed(2):'Buy: SL < เข้า < TP  •  Sell: TP < เข้า < SL';
+  readContext();
+  draw();
+}
+function draw(){
+  const canvas=$('chart'),w=canvas.clientWidth,h=canvas.clientHeight;
+  if(w<70||!bars.length)return;
+  const dpr=window.devicePixelRatio||1;
+  canvas.width=w*dpr;canvas.height=h*dpr;
+  const ctx=canvas.getContext('2d');ctx.scale(dpr,dpr);
+  const visible=bars.slice(Math.max(0,shown-32),shown), p=order||readPlan();
+  const low=Math.min(...visible.map(b=>b.l)),high=Math.max(...visible.map(b=>b.h));
+  const span=Math.max(.1,high-low), margin=span*.13, chartW=w-62;
+  const y=n=>10+(high+margin-n)/(span+margin*2)*(h-35);
+  ctx.font='11px system-ui';
+  for(let i=0;i<=5;i++){
+    const level=low+(high-low)*i/5, pos=y(level);
+    ctx.strokeStyle='#343d4e';ctx.beginPath();ctx.moveTo(0,pos);ctx.lineTo(chartW,pos);ctx.stroke();
+    ctx.fillStyle='#c3cad7';ctx.fillText(price(level),chartW+4,pos+4);
+  }
+  const width=chartW/visible.length;
+  visible.forEach((b,i)=>{
+    const x=width*(i+.5),color=b.c>=b.o?'#52d5aa':'#ff8385';
+    ctx.strokeStyle=color;ctx.beginPath();ctx.moveTo(x,y(b.h));ctx.lineTo(x,y(b.l));ctx.stroke();
+    ctx.fillStyle=color;ctx.fillRect(x-width*.29,Math.min(y(b.o),y(b.c)),width*.58,Math.max(1,Math.abs(y(b.o)-y(b.c))));
+  });
+  for(const [key,color,label] of [['entry','#f7c66b','เข้า'],['sl','#ff8385','SL'],['tp','#52d5aa','TP']]){
+    const pos=y(p[key]);if(!(pos>=10&&pos<=h-25))continue;
+    ctx.strokeStyle=color;ctx.setLineDash([4,4]);ctx.beginPath();ctx.moveTo(0,pos);ctx.lineTo(chartW,pos);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle=color;ctx.fillText(label+' '+price(p[key]),5,pos-3);
+  }
+}
+function finish(reason, closedAt){
+  order.state='done';$('step').disabled=true;$('exit').disabled=true;
+  const pnl=closedAt===undefined?0:(closedAt-order.entry)*(order.side==='Buy'?1:-1);
+  const r=pnl/Math.abs(order.entry-order.sl);
+  const result=closedAt===undefined?reason:reason+' ที่ '+price(closedAt)+' | '+(r>=0?'+':'')+r.toFixed(2)+'R';
+  $('status').textContent=result;
+  recordResult(order.side+' '+price(order.entry)+' · SL '+price(order.sl)+' · TP '+price(order.tp)+' · '+result,order.thesis);
+}
+function recordResult(result,thesis){
+  history.unshift({summary:'M'+timeframe+' · โจทย์ '+(exercise+1)+' · '+result,thesis});
+  history=history.slice(0,50);
+  reviewIndex=0;
+  $('review').hidden=false;
+  saveHistory();
+}
+function saveHistory(){
+  let saved=false;
+  try{localStorage.setItem('xau-lab-v1',JSON.stringify(history));saved=true;}catch{}
+  renderHistory();
+  return saved;
+}
+function next(){
+  const b=bars[shown++],p=order;
+  const inBar=n=>b.l<=n&&n<=b.h;
+  const stop=p.side==='Buy'?b.l<=p.sl:b.h>=p.sl;
+  const target=p.side==='Buy'?b.h>=p.tp:b.l<=p.tp;
+  const fresh=p.state==='pending'&&inBar(p.entry);
+  if(fresh)p.state='open';
+  if(p.state==='open'){
+    if(fresh&&b.o!==p.entry){
+      if(stop&&inBar(p.sl))finish('แตะราคาเข้าและ SL ในแท่งเดียวกัน นับว่าเข้าแล้วโดน SL',p.sl);
+      else $('status').textContent='เข้าแล้วที่ '+price(p.entry)+(target?' · เลื่อนการประเมิน TP ไปแท่งถัดไป เพราะลำดับการแตะราคาไม่ชัดเจน':'');
+    }else{
+      const throughStop=p.side==='Buy'?b.o<p.sl:b.o>p.sl;
+      const throughTarget=p.side==='Buy'?b.o>p.tp:b.o<p.tp;
+      if(throughStop)finish('เปิดแท่งข้าม SL',b.o);
+      else if(throughTarget)finish('เปิดแท่งข้าม TP',p.tp);
+      else if(stop)finish(target?'แตะ SL และ TP ในแท่งเดียวกัน นับ SL ก่อน':'ถึง SL',p.sl);
+      else if(target)finish('ถึง TP',p.tp);
+      else $('status').textContent='สถานะเปิดอยู่ · เข้า '+price(p.entry)+' · ราคาปิด '+price(b.c);
+    }
+  }else $('status').textContent='รอราคาแตะจุดเข้า '+price(p.entry);
+  if(shown===bars.length&&p.state!=='done'){
+    if(p.state==='open')finish('จบโจทย์ที่ราคาปิด',b.c);
+    else finish('จบโจทย์โดยราคาไม่แตะจุดเข้า');
+  }
+  $('exit').disabled=p.state!=='open';
+  update();
+}
+function switchCase(frame){
+  if(order&&order.state!=='done'&&!confirm('ยกเลิกแผนที่กำลังฝึกและเปลี่ยนโจทย์หรือไม่?'))return;
+  if(frame!==undefined)timeframe=frame;else exercise++;
+  setup();
+}
+$('newCase').onclick=()=>switchCase();
+$('m5').onclick=()=>{if(timeframe!==5)switchCase(5);};
+$('m15').onclick=()=>{if(timeframe!==15)switchCase(15);};
+$('check').onclick=()=>{
+  const answer=$('answer').value;
+  if(!answer){$('lesson').textContent='เลือกคำตอบก่อนตรวจ';return;}
+  const feedback={bull:'ไส้ล่างยาวและปิดเหนือราคาเปิด แสดงว่าราคาฟื้นจากจุดต่ำของแท่ง',bear:'ไส้บนยาวและปิดต่ำกว่าราคาเปิด แสดงว่าราคาถอยจากจุดสูงของแท่ง',flat:'ราคาเปิดและปิดใกล้กัน แม้ราคาจะแกว่งขึ้นลงระหว่างแท่ง'};
+  $('lesson').textContent=(answer===pattern?'ถูกต้อง · ':'เฉลย · ')+feedback[pattern]+' ลองเทียบกับแท่งก่อนหน้าเพื่อวางแผนเข้าออก';
+};
+$('plan').oninput=update;
+$('plan').onsubmit=event=>{
+  event.preventDefault();
+  if(order)return;
+  const p=readPlan();
+  if(!valid(p)){$('status').textContent='ตรวจลำดับราคาเข้า SL และ TP ตามทิศทางที่เลือก';return;}
+  order={...p,state:'pending',thesis:$('thesis').value.trim()};
+  $('skip').disabled=true;
+  for(const id of fields)$(id).disabled=true;
+  $('lock').disabled=true;$('step').disabled=false;
+  $('status').textContent='ล็อกแผนแล้ว เปิดแท่งถัดไปเพื่อเริ่มจำลอง';
+};
+$('skip').onclick=()=>{
+  if(order)return;
+  order={state:'done'};
+  for(const id of fields)$(id).disabled=true;
+  $('lock').disabled=true;$('skip').disabled=true;
+  $('status').textContent='บันทึกข้ามโจทย์แล้ว';
+  recordResult('ข้ามโจทย์',$('thesis').value.trim());
+};
+$('saveReview').onclick=()=>{
+  if(reviewIndex<0)return;
+  history[reviewIndex].reflection=$('reflection').value.trim();
+  $('reviewStatus').textContent=saveHistory()?'บันทึกบทเรียนแล้ว':'บันทึกไว้ในหน้านี้ พื้นที่จัดเก็บของเบราว์เซอร์ใช้งานไม่ได้';
+};
+$('step').onclick=next;
+$('exit').onclick=()=>finish('ออกเองที่ราคาปิด',bars[shown-1].c);
+window.addEventListener('resize',draw);
+setup();renderHistory();
+</script></html>
