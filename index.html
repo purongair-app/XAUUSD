@@ -501,12 +501,19 @@ async function initAccounts(){
       $('togglePassword').setAttribute('aria-pressed',String(visible));
       $('togglePassword').setAttribute('aria-label',visible?'ซ่อนรหัสผ่าน':'แสดงรหัสผ่าน');
     };
+    function emailLimitMessage(error){
+      if(error.code==='over_email_send_rate_limit'||error.code==='over_request_rate_limit'||error.status===429){
+        return 'ระบบส่งอีเมลถึงขีดจำกัดชั่วคราว กรุณารอแล้วลองใหม่';
+      }
+      if(error.code==='email_address_not_authorized')return 'ระบบส่งอีเมลยืนยันยังไม่รองรับอีเมลนี้';
+      return '';
+    }
     function sendAccountEmail(send,message){
       const field=$('accountEmail');
       if(!field.reportValidity())return;
       accountAction(async()=>{
         const {error}=await send(field.value.trim());
-        accountMessage(error?'ส่งอีเมลไม่สำเร็จ กรุณาตรวจอีเมลหรือรอสักครู่แล้วลองใหม่':message);
+        accountMessage(error?(emailLimitMessage(error)||'ส่งอีเมลไม่สำเร็จ กรุณาตรวจอีเมลหรือรอสักครู่แล้วลองใหม่'):message);
       });
     }
     $('forgotPassword').onclick=()=>sendAccountEmail(
@@ -561,7 +568,7 @@ async function initAccounts(){
       }
       accountAction(async()=>{
         const {data,error}=await accountClient.auth.signUp({email,password,options:{emailRedirectTo:accountUrl}});
-        if(error){accountMessage(error.code==='email_address_not_authorized'?'ระบบส่งอีเมลยืนยันยังไม่รองรับอีเมลนี้':'สมัครบัญชีไม่สำเร็จ กรุณาตรวจข้อมูลและลองใหม่');return;}
+        if(error){accountMessage(emailLimitMessage(error)||'สมัครบัญชีไม่สำเร็จ กรุณาตรวจข้อมูลและลองใหม่');return;}
         $('accountEmail').value=email;
         $('signupForm').reset();
         if(data.session){await showAccount(data.user);return;}
