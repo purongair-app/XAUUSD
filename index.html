@@ -16,8 +16,14 @@ body:has(#loginScreen:not([hidden])){background:radial-gradient(ellipse at 0 5%,
 #loginScreen .signup-row{text-align:center;margin:22px 0 12px}
 #loginScreen button:focus-visible,#loginScreen input:focus-visible{outline:2px solid #125581;outline-offset:3px}
 #accountStatus:empty{display:none}
+#loginBackdrop{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;overflow:hidden}
+#loginBackdrop span{position:absolute;left:var(--x);top:var(--y);height:var(--wick);width:2px;background:currentColor;color:#fff5f5;opacity:.31}
+#loginBackdrop span.down{color:#690e2a;opacity:.42}
+#loginBackdrop span::after{content:"";position:absolute;left:50%;top:24%;transform:translateX(-50%);width:clamp(7px,2.2vw,30px);height:48%;border-radius:2px;background:currentColor}
+#loginScreen{position:relative}
+body:has(#loginScreen[hidden]) #loginBackdrop{display:none}
 </style>
-<main><section id="loginScreen" aria-label="เข้าสู่ระบบ Trading Lab">
+<div id="loginBackdrop" aria-hidden="true"><span style="--x:3%;--y:72%;--wick:8%"></span><span style="--x:7.1%;--y:66%;--wick:15%"></span><span class="down" style="--x:11.2%;--y:68%;--wick:14%"></span><span style="--x:15.299999999999999%;--y:58%;--wick:13%"></span><span style="--x:19.4%;--y:53%;--wick:12%"></span><span class="down" style="--x:23.5%;--y:56%;--wick:11%"></span><span style="--x:27.599999999999998%;--y:48%;--wick:10%"></span><span style="--x:31.699999999999996%;--y:42%;--wick:9%"></span><span class="down" style="--x:35.8%;--y:45%;--wick:8%"></span><span style="--x:39.9%;--y:35%;--wick:15%"></span><span style="--x:44%;--y:30%;--wick:14%"></span><span class="down" style="--x:48.099999999999994%;--y:37%;--wick:13%"></span><span class="down" style="--x:52.199999999999996%;--y:40%;--wick:12%"></span><span class="down" style="--x:56.3%;--y:47%;--wick:11%"></span><span style="--x:60.39999999999999%;--y:41%;--wick:10%"></span><span style="--x:64.5%;--y:32%;--wick:9%"></span><span style="--x:68.6%;--y:25%;--wick:8%"></span><span class="down" style="--x:72.69999999999999%;--y:28%;--wick:15%"></span><span style="--x:76.8%;--y:18%;--wick:14%"></span><span class="down" style="--x:80.89999999999999%;--y:20%;--wick:13%"></span><span style="--x:85%;--y:12%;--wick:12%"></span><span class="down" style="--x:89.1%;--y:15%;--wick:11%"></span><span style="--x:93.19999999999999%;--y:8%;--wick:10%"></span><span class="down" style="--x:97.3%;--y:11%;--wick:9%"></span></div><main><section id="loginScreen" aria-label="เข้าสู่ระบบ Trading Lab">
 <p class="brand">XAUUSD TRADING LAB</p>
 <h1 id="loginTitle">เข้าสู่ระบบ</h1><p id="loginIntro">เข้าสู่ระบบเพื่อเริ่มฝึกและดูสมุดบันทึกของคุณ</p>
 <form id="accountForm">
