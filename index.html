@@ -1,17 +1,15 @@
 <!doctype html><html lang="th"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>XAUUSD Trading Lab</title>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#101319;color:#ebedf2;font:16px system-ui,sans-serif}main{max-width:1120px;margin:auto;padding:24px}h1{font-size:clamp(28px,5vw,45px);margin:0;color:#f7c66b}h2{font-size:19px;margin:0 0 12px}p{line-height:1.55;color:#bfc6d3}section{background:#1a1f29;border:1px solid #343b49;border-radius:16px;padding:18px;margin-top:16px}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:end}.layout{display:grid;grid-template-columns:2fr 1fr;gap:16px}button,input,select{font:inherit;color:inherit;background:#252d3b;border:1px solid #56617a;border-radius:8px;padding:9px}button{cursor:pointer}button.primary{background:#f7c66b;color:#172030;border-color:#f7c66b;font-weight:700}button:disabled{opacity:.5;cursor:default}label{display:grid;gap:5px;margin:8px 0}input,select{width:100%}canvas{width:100%;height:340px;display:block}small{color:#c4cbd7}output{display:block;margin-top:12px;line-height:1.6}summary{cursor:pointer;font-weight:700;color:#f7c66b}textarea{width:100%;min-height:70px;resize:vertical;font:inherit;color:inherit;background:#252d3b;border:1px solid #56617a;border-radius:8px;padding:9px}ol{padding-left:24px}li{margin:8px 0}@media(max-width:760px){.layout{grid-template-columns:1fr;gap:0}main{padding:14px}canvas{height:290px}}
-</style>
-<main><section aria-label="บัญชีผู้ใช้">
-<h2>บัญชี Trading Lab</h2>
+[hidden]{display:none!important}#loginScreen{max-width:470px;margin:clamp(32px,12vh,120px) auto 0}#signedIn{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:20px}#accountName{overflow-wrap:anywhere}</style>
+<main><section id="loginScreen" aria-label="เข้าสู่ระบบ Trading Lab">
+<h1>Trading Lab</h1><p>เข้าสู่ระบบเพื่อเริ่มฝึกและดูสมุดบันทึกของคุณ</p>
 <form id="accountForm">
 <label>อีเมล<input id="accountEmail" type="email" autocomplete="username" required></label>
 <label>รหัสผ่าน<input id="accountPassword" type="password" autocomplete="current-password" required></label>
 <div class="row"><button class="primary" id="signIn">เข้าสู่ระบบ</button><button type="button" id="signUp">สมัครบัญชี</button></div>
 </form>
-<div id="signedIn" hidden><p id="accountName"></p><button type="button" id="signOut">ออกจากระบบ</button></div>
-<output id="accountStatus" aria-live="polite"></output>
-</section><header><h1>XAUUSD Trading Lab</h1><p>ฝึกอ่านแท่งเทียน วางแผนเข้าออก และทดสอบแผนด้วยข้อมูลจำลอง</p></header>
+<output id="accountStatus" aria-live="polite"></output></section><div id="trainingScreen" hidden inert><div id="signedIn" hidden><p id="accountName"></p><button type="button" id="signOut">ออกจากระบบ</button></div><output id="trainingAccountStatus" aria-live="polite"></output><header><h1>XAUUSD Trading Lab</h1><p>ฝึกอ่านแท่งเทียน วางแผนเข้าออก และทดสอบแผนด้วยข้อมูลจำลอง</p></header>
 <div class="row"><button id="m5">M5</button><button id="m15">M15</button><button id="newCase">โจทย์ถัดไป</button></div>
 <section><h2>อ่านกราฟก่อนวางแผน</h2>
 <p id="context"></p>
@@ -41,7 +39,7 @@
 <button type="button" id="skip">บันทึกข้ามโจทย์</button>
 <div id="review" hidden><label>บทเรียนหลังจบโจทย์<textarea id="reflection" maxlength="400"></textarea></label><button id="saveReview" type="button">บันทึกบทเรียน</button><output id="reviewStatus" aria-live="polite"></output></div>
 </section></div>
-<section><h2>สมุดบันทึกผลฝึก</h2><small>บัญชีที่เข้าสู่ระบบใช้สมุดบันทึกออนไลน์ ส่วนผู้เยี่ยมชมใช้ข้อมูลในเบราว์เซอร์นี้</small><ol id="journal"></ol></section></main>
+<section><h2>สมุดบันทึกผลฝึก</h2><small>สมุดบันทึกออนไลน์ของบัญชีนี้</small><ol id="journal"></ol></section></div></main>
 <script>
 'use strict';
 const $=id=>document.getElementById(id);
@@ -56,10 +54,8 @@ const training=[
 let activeTraining=null;
 let accountClient=null, accountUser=null, accountReady=false, accountVersion=0;
 let pendingSave=Promise.resolve();
-const guestKey='xau-lab-v1';
 const sampleButtons=['sampleBuy','sampleSell'];
 let timeframe=5, exercise=0, bars=[], shown, order, pattern, history=[], reviewIndex=-1;
-try { history=JSON.parse(localStorage.getItem('xau-lab-v1') || '[]'); if(!Array.isArray(history)) history=[]; } catch {}
 function renderHistory(){
   $('journal').replaceChildren();
   for(const record of history){
@@ -215,18 +211,15 @@ function saveHistory(record){
     pendingSave=pendingSave.then(async()=>{
       if(version!==accountVersion)return false;
       const {error}=await accountClient.from('xau_training_journal').upsert(row);
-      if(error&&version===accountVersion)$('accountStatus').textContent='บันทึกออนไลน์ไม่สำเร็จ ลองกดบันทึกบทเรียนอีกครั้ง';
+      if(error&&version===accountVersion)$('trainingAccountStatus').textContent='บันทึกออนไลน์ไม่สำเร็จ ลองกดบันทึกบทเรียนอีกครั้ง';
       return !error;
     }).catch(()=>{
-      if(version===accountVersion)$('accountStatus').textContent='เชื่อมต่อไม่ได้ ลองบันทึกอีกครั้ง';
+      if(version===accountVersion)$('trainingAccountStatus').textContent='เชื่อมต่อไม่ได้ ลองบันทึกอีกครั้ง';
       return false;
     });
     return pendingSave;
   }
-  let saved=false;
-  try{localStorage.setItem('xau-lab-v1',JSON.stringify(history));saved=true;}catch{}
-  renderHistory();
-  return saved;
+  return false;
 }
 function next(){
   const b=bars[shown++],p=order;
@@ -308,7 +301,7 @@ $('exit').onclick=()=>finish('ออกเองที่ราคาปิด',
 window.addEventListener('resize',draw);
 setup();renderHistory();
 const accountConfig={url:'https://lfarepyluyfmnxnubzdr.supabase.co',publishableKey:"sb_publishable_uUFNOhjnFPrATayrxNB3Cg_qrQH_98_"};
-const accountMessage=message=>{$('accountStatus').textContent=message;};
+const accountMessage=message=>{$(accountUser?'trainingAccountStatus':'accountStatus').textContent=message;};
 function setAccountBusy(busy){
   for(const id of ['signIn','signUp','signOut','accountEmail','accountPassword'])$(id).disabled=busy;
 }
@@ -320,15 +313,16 @@ async function showAccount(user){
   history=[];
   setup();
   renderHistory();
-  $('accountForm').hidden=Boolean(user);
+  $('loginScreen').hidden=Boolean(user);
+  $('trainingScreen').hidden=!user;
+  $('trainingScreen').inert=!user;
   $('signedIn').hidden=!user;
   $('accountName').textContent=user?.email||'';
   $('accountPassword').value='';
-  if(!user){
-    try{const rows=JSON.parse(localStorage.getItem(guestKey)||'[]');history=Array.isArray(rows)?rows:[];}catch{}
-    renderHistory();
-    return;
-  }
+  $('accountStatus').textContent='';
+  $('trainingAccountStatus').textContent='';
+  if(!user)return;
+  draw();
   const controls=['lock','skip'];
   for(const id of controls)$(id).disabled=true;
   const {data,error}=await accountClient.from('xau_training_journal').select('id,summary,thesis,reflection').order('created_at',{ascending:false}).limit(50);
@@ -346,7 +340,7 @@ async function accountAction(action){
 async function initAccounts(){
   setAccountBusy(true);
   if(!accountConfig.url||!accountConfig.publishableKey){
-    accountMessage('อยู่ระหว่างเชื่อมระบบบัญชี คุณยังใช้โหมดฝึกบนเครื่องนี้ได้');
+    accountMessage('อยู่ระหว่างเชื่อมระบบบัญชี กรุณาลองใหม่ภายหลัง');
     return;
   }
   try{
@@ -390,7 +384,7 @@ async function initAccounts(){
       accountMessage('ออกจากระบบแล้ว');
     });
     setAccountBusy(false);
-  }catch{accountMessage('ระบบบัญชีเชื่อมต่อไม่ได้ คุณยังฝึกบนเครื่องนี้ได้');}
+  }catch{accountMessage('ระบบบัญชีเชื่อมต่อไม่ได้ กรุณารีเฟรชเพื่อลองใหม่');}
 }
 initAccounts();
 </script></html>
