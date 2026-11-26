@@ -307,7 +307,7 @@ $('step').onclick=next;
 $('exit').onclick=()=>finish('ออกเองที่ราคาปิด',bars[shown-1].c);
 window.addEventListener('resize',draw);
 setup();renderHistory();
-const accountConfig={url:'https://lfarepyluyfmnxnubzdr.supabase.co',publishableKey:''};
+const accountConfig={url:'https://lfarepyluyfmnxnubzdr.supabase.co',publishableKey:"sb_publishable_uUFNOhjnFPrATayrxNB3Cg_qrQH_98_"};
 const accountMessage=message=>{$('accountStatus').textContent=message;};
 function setAccountBusy(busy){
   for(const id of ['signIn','signUp','signOut','accountEmail','accountPassword'])$(id).disabled=busy;
@@ -374,9 +374,9 @@ async function initAccounts(){
       const email=$('accountEmail').value.trim(),password=$('accountPassword').value;
       if(password.length<8){accountMessage('ใช้รหัสผ่านอย่างน้อย 8 ตัวอักษร');return;}
       accountAction(async()=>{
-        const emailRedirectTo=location.origin+'/XAUUSD/';
+        const emailRedirectTo='https://purongair-app.github.io/XAUUSD/';
         const {data,error}=await accountClient.auth.signUp({email,password,options:{emailRedirectTo}});
-        if(error){accountMessage('สมัครบัญชีไม่สำเร็จ กรุณาตรวจข้อมูลและลองใหม่');return;}
+        if(error){accountMessage(error.code==='email_address_not_authorized'?'ระบบส่งอีเมลยืนยันยังไม่รองรับอีเมลนี้':'สมัครบัญชีไม่สำเร็จ กรุณาตรวจข้อมูลและลองใหม่');return;}
         $('accountPassword').value='';
         if(data.session)await showAccount(data.user);
         else accountMessage('ตรวจอีเมลเพื่อยืนยันการสมัคร แล้วกลับมาเข้าสู่ระบบ');
