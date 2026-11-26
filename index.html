@@ -307,7 +307,7 @@ $('step').onclick=next;
 $('exit').onclick=()=>finish('ออกเองที่ราคาปิด',bars[shown-1].c);
 window.addEventListener('resize',draw);
 setup();renderHistory();
-const accountConfig={url:'',publishableKey:''};
+const accountConfig={url:'https://lfarepyluyfmnxnubzdr.supabase.co',publishableKey:''};
 const accountMessage=message=>{$('accountStatus').textContent=message;};
 function setAccountBusy(busy){
   for(const id of ['signIn','signUp','signOut','accountEmail','accountPassword'])$(id).disabled=busy;
