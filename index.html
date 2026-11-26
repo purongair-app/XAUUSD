@@ -1,14 +1,35 @@
 <!doctype html><html lang="th"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>XAUUSD Trading Lab</title>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#101319;color:#ebedf2;font:16px system-ui,sans-serif}main{max-width:1120px;margin:auto;padding:24px}h1{font-size:clamp(28px,5vw,45px);margin:0;color:#f7c66b}h2{font-size:19px;margin:0 0 12px}p{line-height:1.55;color:#bfc6d3}section{background:#1a1f29;border:1px solid #343b49;border-radius:16px;padding:18px;margin-top:16px}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:end}.layout{display:grid;grid-template-columns:2fr 1fr;gap:16px}button,input,select{font:inherit;color:inherit;background:#252d3b;border:1px solid #56617a;border-radius:8px;padding:9px}button{cursor:pointer}button.primary{background:#f7c66b;color:#172030;border-color:#f7c66b;font-weight:700}button:disabled{opacity:.5;cursor:default}label{display:grid;gap:5px;margin:8px 0}input,select{width:100%}canvas{width:100%;height:340px;display:block}small{color:#c4cbd7}output{display:block;margin-top:12px;line-height:1.6}summary{cursor:pointer;font-weight:700;color:#f7c66b}textarea{width:100%;min-height:70px;resize:vertical;font:inherit;color:inherit;background:#252d3b;border:1px solid #56617a;border-radius:8px;padding:9px}ol{padding-left:24px}li{margin:8px 0}@media(max-width:760px){.layout{grid-template-columns:1fr;gap:0}main{padding:14px}canvas{height:290px}}
-[hidden]{display:none!important}#loginScreen{max-width:470px;margin:clamp(32px,12vh,120px) auto 0}#signedIn{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:20px}#accountName{overflow-wrap:anywhere}</style>
+[hidden]{display:none!important}#loginScreen{max-width:470px;margin:clamp(32px,12vh,120px) auto 0}#signedIn{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:20px}#accountName{overflow-wrap:anywhere}
+body:has(#loginScreen:not([hidden])){background:radial-gradient(ellipse at 0 5%,#ff5a65,transparent 56%),#ef1738;min-height:100vh}
+#loginScreen{max-width:540px;margin:clamp(4px,5vh,60px) auto 0;padding:clamp(24px,6vw,52px);background:#fff;color:#202e3a;border:0;border-radius:26px;box-shadow:0 18px 52px #7d071f48}
+#loginScreen .brand{color:#bf1432;font-size:13px;font-weight:800;letter-spacing:.1em;margin:0 0 12px}
+#loginScreen h1{color:#202e3a;font-size:clamp(30px,6vw,40px)}#loginScreen p{color:#526171}
+#loginScreen label{margin:20px 0 0;font-weight:650}
+#loginScreen input{background:#eff2f4;color:#202e3a;border:1px solid #dce2e7;min-height:52px;padding:12px;border-radius:10px}
+.password-row{position:relative;display:block}.password-row input{padding-inline-end:76px!important}
+#loginScreen .account-link{color:#125581;padding:0;background:none;border:0;font-weight:650}
+#togglePassword{position:absolute;right:12px;top:50%;transform:translateY(-50%)}
+#loginScreen .login-primary{width:100%;min-height:54px;margin-top:22px;background:#e91c3b;color:#fff;border:0;font-weight:750;border-radius:11px}
+#loginScreen .account-actions{display:flex;justify-content:flex-end;margin-top:15px}
+#loginScreen .signup-row{text-align:center;margin:22px 0 12px}
+#loginScreen button:focus-visible,#loginScreen input:focus-visible{outline:2px solid #125581;outline-offset:3px}
+#accountStatus:empty{display:none}
+</style>
 <main><section id="loginScreen" aria-label="เข้าสู่ระบบ Trading Lab">
-<h1>Trading Lab</h1><p>เข้าสู่ระบบเพื่อเริ่มฝึกและดูสมุดบันทึกของคุณ</p>
+<p class="brand">XAUUSD TRADING LAB</p>
+<h1 id="loginTitle">เข้าสู่ระบบ</h1><p id="loginIntro">เข้าสู่ระบบเพื่อเริ่มฝึกและดูสมุดบันทึกของคุณ</p>
 <form id="accountForm">
-<label>อีเมล<input id="accountEmail" type="email" autocomplete="username" required></label>
-<label>รหัสผ่าน<input id="accountPassword" type="password" autocomplete="current-password" required></label>
-<div class="row"><button class="primary" id="signIn">เข้าสู่ระบบ</button><button type="button" id="signUp">สมัครบัญชี</button></div>
+<label>อีเมล<input id="accountEmail" type="email" autocomplete="username" placeholder="name@example.com" required></label>
+<label for="accountPassword">รหัสผ่าน</label>
+<div class="password-row"><input id="accountPassword" type="password" autocomplete="current-password" placeholder="กรอกรหัสผ่าน" required><button type="button" class="account-link" id="togglePassword" aria-label="แสดงรหัสผ่าน" aria-pressed="false">แสดง</button></div>
+<div class="account-actions"><button type="button" class="account-link" id="forgotPassword">ลืมรหัสผ่าน?</button></div>
+<button class="login-primary" id="signIn">เข้าสู่ระบบ</button>
+<p class="signup-row">ยังไม่มีบัญชี? <button type="button" class="account-link" id="signUp">สมัครบัญชี</button></p>
+<button type="button" class="account-link" id="resendConfirmation">ยังไม่ได้รับอีเมลยืนยัน? ส่งอีกครั้ง</button>
 </form>
+<form id="recoveryForm" hidden><label>รหัสผ่านใหม่<input id="newPassword" type="password" autocomplete="new-password" minlength="8" required></label><button class="login-primary" id="savePassword">บันทึกรหัสผ่านใหม่</button></form>
 <output id="accountStatus" aria-live="polite"></output></section><div id="trainingScreen" hidden inert><div id="signedIn" hidden><p id="accountName"></p><button type="button" id="signOut">ออกจากระบบ</button></div><output id="trainingAccountStatus" aria-live="polite"></output><header><h1>XAUUSD Trading Lab</h1><p>ฝึกอ่านแท่งเทียน วางแผนเข้าออก และทดสอบแผนด้วยข้อมูลจำลอง</p></header>
 <div class="row"><button id="m5">M5</button><button id="m15">M15</button><button id="newCase">โจทย์ถัดไป</button></div>
 <section><h2>อ่านกราฟก่อนวางแผน</h2>
@@ -302,8 +323,19 @@ window.addEventListener('resize',draw);
 setup();renderHistory();
 const accountConfig={url:'https://lfarepyluyfmnxnubzdr.supabase.co',publishableKey:"sb_publishable_uUFNOhjnFPrATayrxNB3Cg_qrQH_98_"};
 const accountMessage=message=>{$(accountUser?'trainingAccountStatus':'accountStatus').textContent=message;};
+const accountUrl='https://purongair-app.github.io/XAUUSD/';
+let recoveryMode=false;
+function showRecovery(){
+  recoveryMode=true;
+  void showAccount(null);
+  $('loginTitle').textContent='ตั้งรหัสผ่านใหม่';
+  $('loginIntro').textContent='ใช้รหัสผ่านอย่างน้อย 8 ตัวอักษร';
+  $('accountForm').hidden=true;
+  $('recoveryForm').hidden=false;
+  window.history.replaceState(null,'',accountUrl);
+}
 function setAccountBusy(busy){
-  for(const id of ['signIn','signUp','signOut','accountEmail','accountPassword'])$(id).disabled=busy;
+  for(const id of ['signIn','signUp','signOut','accountEmail','accountPassword','forgotPassword','resendConfirmation','savePassword','newPassword'])$(id).disabled=busy;
 }
 async function showAccount(user){
   if(accountReady&&accountUser?.id===user?.id)return;
@@ -346,14 +378,54 @@ async function initAccounts(){
   try{
     const {createClient}=await import('https://esm.sh/@supabase/supabase-js@2.89.0');
     accountClient=createClient(accountConfig.url,accountConfig.publishableKey,{auth:{storageKey:'xau-training-auth'}});
+    const recoveryLink=new URLSearchParams(location.hash.slice(1)).get('type')==='recovery';
     const {data,error}=await accountClient.auth.getSession();
     if(error)throw error;
-    await showAccount(data.session?.user||null);
+    if(recoveryLink&&data.session)showRecovery();
+    else await showAccount(data.session?.user||null);
     accountClient.auth.onAuthStateChange((event,session)=>{
-      if(event==='SIGNED_IN'||event==='SIGNED_OUT'){
+      if(event==='PASSWORD_RECOVERY'){setTimeout(showRecovery,0);return;}
+      if(!recoveryMode&&(event==='SIGNED_IN'||event==='SIGNED_OUT')){
         setTimeout(()=>showAccount(session?.user||null).catch(()=>accountMessage('โหลดข้อมูลบัญชีไม่สำเร็จ')),0);
       }
     });
+    $('togglePassword').onclick=()=>{
+      const input=$('accountPassword'), visible=input.type==='password';
+      input.type=visible?'text':'password';
+      $('togglePassword').textContent=visible?'ซ่อน':'แสดง';
+      $('togglePassword').setAttribute('aria-pressed',String(visible));
+      $('togglePassword').setAttribute('aria-label',visible?'ซ่อนรหัสผ่าน':'แสดงรหัสผ่าน');
+    };
+    function sendAccountEmail(send,message){
+      const field=$('accountEmail');
+      if(!field.reportValidity())return;
+      accountAction(async()=>{
+        const {error}=await send(field.value.trim());
+        accountMessage(error?'ส่งอีเมลไม่สำเร็จ กรุณาตรวจอีเมลหรือรอสักครู่แล้วลองใหม่':message);
+      });
+    }
+    $('forgotPassword').onclick=()=>sendAccountEmail(
+      email=>accountClient.auth.resetPasswordForEmail(email,{redirectTo:accountUrl}),
+      'หากอีเมลนี้มีบัญชี ให้ตรวจกล่องจดหมายเพื่อเปิดลิงก์ตั้งรหัสผ่านใหม่'
+    );
+    $('resendConfirmation').onclick=()=>sendAccountEmail(
+      email=>accountClient.auth.resend({type:'signup',email,options:{emailRedirectTo:accountUrl}}),
+      'หากบัญชีนี้รอยืนยัน ให้ตรวจกล่องจดหมายและจดหมายขยะ'
+    );
+    $('recoveryForm').onsubmit=event=>{
+      event.preventDefault();
+      accountAction(async()=>{
+        const {data,error}=await accountClient.auth.updateUser({password:$('newPassword').value});
+        if(error){accountMessage('ตั้งรหัสผ่านไม่สำเร็จ กรุณาลองใหม่หรือขอลิงก์ใหม่');return;}
+        $('newPassword').value='';
+        $('recoveryForm').hidden=true;
+        $('accountForm').hidden=false;
+        $('loginTitle').textContent='เข้าสู่ระบบ';
+        $('loginIntro').textContent='เข้าสู่ระบบเพื่อเริ่มฝึกและดูสมุดบันทึกของคุณ';
+        recoveryMode=false;
+        await showAccount(data.user);
+      });
+    };
     $('accountForm').onsubmit=event=>{
       event.preventDefault();
       accountAction(async()=>{
