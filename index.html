@@ -1,4 +1,4 @@
-<!doctype html><html lang="th"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>XAUUSD Trading Lab</title>
+<!doctype html><html lang="th"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PUROnGXAU · ห้องฝึกเทรดทอง</title>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#101319;color:#ebedf2;font:16px system-ui,sans-serif}main{max-width:1120px;margin:auto;padding:24px}h1{font-size:clamp(28px,5vw,45px);margin:0;color:#f7c66b}h2{font-size:19px;margin:0 0 12px}p{line-height:1.55;color:#bfc6d3}section{background:#1a1f29;border:1px solid #343b49;border-radius:16px;padding:18px;margin-top:16px}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:end}.layout{display:grid;grid-template-columns:2fr 1fr;gap:16px}button,input,select{font:inherit;color:inherit;background:#252d3b;border:1px solid #56617a;border-radius:8px;padding:9px}button{cursor:pointer}button.primary{background:#f7c66b;color:#172030;border-color:#f7c66b;font-weight:700}button:disabled{opacity:.5;cursor:default}label{display:grid;gap:5px;margin:8px 0}input,select{width:100%}canvas{width:100%;height:340px;display:block}small{color:#c4cbd7}output{display:block;margin-top:12px;line-height:1.6}summary{cursor:pointer;font-weight:700;color:#f7c66b}textarea{width:100%;min-height:70px;resize:vertical;font:inherit;color:inherit;background:#252d3b;border:1px solid #56617a;border-radius:8px;padding:9px}ol{padding-left:24px}li{margin:8px 0}@media(max-width:760px){.layout{grid-template-columns:1fr;gap:0}main{padding:14px}canvas{height:290px}}
 [hidden]{display:none!important}#loginScreen{max-width:470px;margin:clamp(32px,12vh,120px) auto 0}#signedIn{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:20px}#accountName{overflow-wrap:anywhere}
@@ -23,9 +23,6 @@ body:has(#loginScreen:not([hidden])){background:radial-gradient(ellipse at 0 5%,
 #loginBackdrop span::after{content:"";position:absolute;left:50%;top:24%;transform:translateX(-50%);width:clamp(7px,2.2vw,30px);height:48%;border-radius:2px;background:currentColor}
 #loginScreen{position:relative}
 body:has(#loginScreen[hidden]) #loginBackdrop{display:none}
-.training-modes{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 12px}
-.training-modes button{min-height:44px}
-.training-modes button[aria-pressed="true"]{background:#f7c66b;color:#172030;border-color:#f7c66b;font-weight:700}
 .training-nav{align-items:center}
 .training-nav button,.training-controls button{min-height:44px}
 .training-controls{display:grid;grid-template-columns:1fr 1fr;align-items:stretch}
@@ -48,9 +45,94 @@ body:has(#loginScreen[hidden]) #loginBackdrop{display:none}
 #coachPanel .row{align-items:center;justify-content:space-between}#coachPanel h3{margin:0;font-size:1rem}
 #coachPanel output{color:#f7c66b;font-weight:700}#coachPanel p{margin:7px 0 10px}
 #coachPlan{min-height:44px;margin:0 0 8px}
+
+body:has(#trainingScreen:not([hidden])){background:#0b1018}
+body:has(#trainingScreen:not([hidden])) main{max-width:1460px;padding:18px 24px 40px}
+#trainingScreen{--edge:#2c3646;--muted:#aebbc9;--gold:#f3c675;--paper:#141c29;--top:#1a2433}
+#trainingScreen button:focus-visible,#trainingScreen select:focus-visible,#trainingScreen input:focus-visible,#trainingScreen textarea:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+#signedIn{margin-bottom:14px;padding:12px 16px;background:#131c29;border:1px solid var(--edge);border-radius:14px}
+.workspace-brand,.workspace-account{display:flex;align-items:center;gap:11px;min-width:0}
+.workspace-brand strong,.workspace-brand small{display:block}
+.workspace-brand strong{color:var(--gold);letter-spacing:.045em;font-size:1.13rem}
+.workspace-brand small{color:var(--muted)}
+.brand-symbol{display:flex;align-items:end;justify-content:center;gap:4px;width:40px;height:40px;padding:10px;border:1px solid #775c36;border-radius:10px;background:#282235}
+.brand-symbol i{width:4px;background:var(--gold);border-radius:2px}
+.brand-symbol i:nth-child(1){height:8px}.brand-symbol i:nth-child(2){height:13px}.brand-symbol i:nth-child(3){height:18px}
+.workspace-account{flex-wrap:wrap}.workspace-account p{margin:0;color:var(--muted);font-size:.85rem}
+#trainingAccountStatus:empty{display:none}
+#trainingAccountStatus:not(:empty){margin:-2px 0 14px;color:#f5c78b}
+.workspace-layout{display:grid;grid-template-columns:222px minmax(0,1fr);gap:16px;align-items:start}
+.lesson-nav{padding:15px;border:1px solid var(--edge);border-radius:14px;background:var(--paper)}
+.lesson-nav-title{margin:0 0 14px;color:#edf1f7;font-size:1rem;font-weight:750}
+.lesson-group+.lesson-group{margin-top:14px;padding-top:14px;border-top:1px solid var(--edge)}
+.lesson-group h2{margin:0 0 7px 6px;color:var(--muted);font-size:.84rem}
+.lesson-group button{display:flex;align-items:center;gap:8px;width:100%;min-height:46px;margin-top:4px;padding:7px 8px;border-color:transparent;background:transparent;text-align:left;font-size:.89rem}
+.lesson-group button:hover{background:#202a3c}
+.lesson-group button[aria-pressed="true"]{background:#302a27;border-color:#806238;color:#fbe1ac;font-weight:720}
+.lesson-count{display:grid;place-items:center;flex:0 0 23px;height:23px;border-radius:6px;background:#263449;color:#ccd6e2;font-size:.78rem;font-variant-numeric:tabular-nums}
+.lesson-group button[aria-pressed="true"] .lesson-count{background:var(--gold);color:#221809}
+.lesson-picker{display:none}
+.workspace-header{display:flex;justify-content:space-between;align-items:end;gap:16px;padding:20px;background:linear-gradient(115deg,#242634 0%,#192637 100%);border:1px solid #394354;border-radius:14px}
+.workspace-header h1{color:#f4f5f8;font-size:clamp(1.55rem,3vw,2.2rem);outline:none}
+#lessonLevel{margin:0 0 3px;color:var(--gold);font-size:.88rem;font-weight:750}
+#lessonIntro{margin:7px 0 0;color:#c7d1dd}
+#lessonNext{flex:0 0 auto;min-height:44px;border-color:#806238;color:#f4d79b;background:#302a27}
+#lessonNext:hover{background:#41362a}
+.workspace-content section{margin-top:12px;padding:15px;background:var(--paper);border-color:var(--edge);border-radius:14px}
+.workspace-content .layout{grid-template-columns:minmax(0,1.7fr) minmax(270px,1fr);gap:12px;align-items:start}
+.workspace-content .layout section{min-width:0}
+.workspace-content button:not(.primary),.workspace-content input,.workspace-content select,.workspace-content textarea,#accountToolbar button{border-color:#46546a;background-color:#202b3b}
+.workspace-content button.primary{background:var(--gold);border-color:var(--gold)}
+.workspace-content #lessonNext{border-color:#806238;background-color:#302a27}
+#caption{font-size:1rem;color:#edf1f7;font-variant-numeric:tabular-nums}
+#ohlc{margin:10px 0;color:var(--muted);font-size:.86rem;font-variant-numeric:tabular-nums}
+.workspace-content #chart{height:350px;border-radius:8px;background:#101722}
+.workspace-content #trainingNav{margin-top:12px}
+#trainingScenarios{margin-top:12px;padding:12px 15px;border:1px solid var(--edge);border-radius:12px;background:var(--paper)}
+#trainingScenarios .row{margin-top:10px}
+.risk-fields{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.risk-fields label{min-width:0}
+.reading-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;align-items:start}
+.reading-grid section{min-width:0}
+.candle-example{display:grid;grid-template-columns:minmax(94px,.55fr) minmax(0,1fr);align-items:stretch;gap:10px;margin:12px 0}
+.candle-figure{position:relative;min-height:155px;margin:0;border:1px solid var(--edge);border-radius:9px;background:#101722}
+.candle-wick,.candle-body{position:absolute;left:50%;transform:translateX(-50%);border-radius:2px;background:var(--candle-color,#79e6c1)}
+.candle-wick{top:10%;bottom:10%;width:2px}.candle-body{top:var(--candle-top,35%);height:max(3px,var(--candle-height,35%));width:25px}
+.reading-values{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin:0}
+.reading-values div{padding:8px 7px;border:1px solid var(--edge);border-radius:7px;background:#101722}
+.reading-values dt{color:var(--muted);font-size:.78rem}.reading-values dd{margin:3px 0 0;font-variant-numeric:tabular-nums;font-size:.91rem}
+.reading-notes dl{margin:8px 0 14px}.reading-notes dt{margin-top:10px;font-weight:700}.reading-notes dd{margin:2px 0 0;color:var(--muted)}
+.reading-notes details{margin-top:12px}.reading-notes figure{margin:12px 0 0}.reading-notes img{display:block;width:100%;height:auto;max-width:500px;margin:0 auto;border-radius:7px}
+.reading-notes figcaption{margin-top:5px;color:var(--muted);font-size:.84rem}.reading-notes a{color:var(--gold)}
+.example-table{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeric:tabular-nums}
+.example-table th,.example-table td{padding:8px 6px;text-align:start;border-bottom:1px solid var(--edge)}
+.reading-grid form{margin-top:12px}
+@media(max-width:1050px){
+  .workspace-layout{grid-template-columns:190px minmax(0,1fr)}
+  .workspace-header{flex-wrap:wrap;align-items:center}
+}
+@media(max-width:880px){
+  body:has(#trainingScreen:not([hidden])) main{padding:12px 14px 26px}
+  .workspace-layout{grid-template-columns:minmax(0,1fr);gap:10px}
+  .lesson-nav{padding:9px 12px}
+  .lesson-nav-title,.lesson-group{display:none}
+  .lesson-picker{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);align-items:center;gap:8px;margin:0;color:#edf1f7;font-size:.88rem}
+  .lesson-picker select{min-height:44px;width:100%}
+}
+@media(max-width:650px){
+  #signedIn{padding:9px 10px}
+  #accountToolbar button{min-height:40px;padding:6px 8px;font-size:.86rem}
+  .workspace-header{gap:9px;padding:14px}
+  #lessonIntro{font-size:.9rem}
+  #lessonNext{min-height:40px;font-size:.88rem}
+  .workspace-content .layout{grid-template-columns:minmax(0,1fr);gap:0}
+  .reading-grid{grid-template-columns:minmax(0,1fr);gap:0}
+  .workspace-content #chart{height:280px}
+  .workspace-content section{padding:12px}
+}
 </style>
 <div id="loginBackdrop" aria-hidden="true"><span style="--x:3%;--y:72%;--wick:8%"></span><span style="--x:7.1%;--y:66%;--wick:15%"></span><span class="down" style="--x:11.2%;--y:68%;--wick:14%"></span><span style="--x:15.299999999999999%;--y:58%;--wick:13%"></span><span style="--x:19.4%;--y:53%;--wick:12%"></span><span class="down" style="--x:23.5%;--y:56%;--wick:11%"></span><span style="--x:27.599999999999998%;--y:48%;--wick:10%"></span><span style="--x:31.699999999999996%;--y:42%;--wick:9%"></span><span class="down" style="--x:35.8%;--y:45%;--wick:8%"></span><span style="--x:39.9%;--y:35%;--wick:15%"></span><span style="--x:44%;--y:30%;--wick:14%"></span><span class="down" style="--x:48.099999999999994%;--y:37%;--wick:13%"></span><span class="down" style="--x:52.199999999999996%;--y:40%;--wick:12%"></span><span class="down" style="--x:56.3%;--y:47%;--wick:11%"></span><span style="--x:60.39999999999999%;--y:41%;--wick:10%"></span><span style="--x:64.5%;--y:32%;--wick:9%"></span><span style="--x:68.6%;--y:25%;--wick:8%"></span><span class="down" style="--x:72.69999999999999%;--y:28%;--wick:15%"></span><span style="--x:76.8%;--y:18%;--wick:14%"></span><span class="down" style="--x:80.89999999999999%;--y:20%;--wick:13%"></span><span style="--x:85%;--y:12%;--wick:12%"></span><span class="down" style="--x:89.1%;--y:15%;--wick:11%"></span><span style="--x:93.19999999999999%;--y:8%;--wick:10%"></span><span class="down" style="--x:97.3%;--y:11%;--wick:9%"></span></div><main><section id="loginScreen" aria-label="เข้าสู่ระบบ Trading Lab">
-<p class="brand">XAUUSD TRADING LAB</p>
+<p class="brand">PUROnGXAU</p>
 <h1 id="loginTitle">เข้าสู่ระบบ</h1><p id="loginIntro">เข้าสู่ระบบเพื่อเริ่มฝึกและดูสมุดบันทึกของคุณ</p>
 <form id="accountForm">
 <label>อีเมล<input id="accountEmail" type="email" autocomplete="username" placeholder="name@example.com" required></label>
@@ -75,27 +157,86 @@ body:has(#loginScreen[hidden]) #loginBackdrop{display:none}
 </form>
 <p id="forgotBackRow" class="signup-row" hidden><button type="button" class="account-link" id="forgotBack">กลับไปเข้าสู่ระบบ</button></p>
 <form id="recoveryForm" hidden><label>รหัสผ่านใหม่<input id="newPassword" type="password" autocomplete="new-password" minlength="8" required></label><button class="login-primary" id="savePassword">บันทึกรหัสผ่านใหม่</button></form>
-<output id="accountStatus" aria-live="polite"></output></section><div id="trainingScreen" hidden inert><div id="signedIn" hidden><p id="accountName"></p><div id="accountToolbar"><button type="button" id="refreshTraining">รีเฟรช</button><button type="button" id="signOut">ออกจากระบบ</button></div></div><output id="trainingAccountStatus" aria-live="polite"></output><header><h1>XAUUSD Trading Lab</h1><p>ฝึกอ่านแท่งเทียน วางแผนเข้าออก และทดสอบแผนด้วยข้อมูลจำลอง</p></header>
-<nav class="training-modes" aria-label="โหมดฝึกเทรด"><button type="button" id="watchMode" aria-pressed="false">ดูเทรดจำลอง</button><button type="button" id="coachMode" aria-pressed="false">ฝึกเทรดกับ AI</button><button type="button" id="practiceMode" aria-pressed="true">ฝึกเข้า–ออกออเดอร์</button><button type="button" id="planMode" aria-pressed="false">วางแผนล่วงหน้า</button></nav>
+<output id="accountStatus" aria-live="polite"></output></section>
+<div id="trainingScreen" hidden inert>
+<header id="signedIn" hidden>
+  <div class="workspace-brand"><span class="brand-symbol" aria-hidden="true"><i></i><i></i><i></i></span><div><strong>PUROnGXAU</strong><small>ห้องฝึกเทรดทอง XAUUSD</small></div></div>
+  <div class="workspace-account"><p id="accountName"></p><div id="accountToolbar"><button type="button" id="refreshTraining">รีเฟรช</button><button type="button" id="signOut">ออกจากระบบ</button></div></div>
+</header>
+<output id="trainingAccountStatus" aria-live="polite"></output>
+<div class="workspace-layout">
+<nav class="lesson-nav" aria-label="บทเรียนตามระดับความยาก">
+  <p class="lesson-nav-title">บทเรียนฝึกเทรด</p>
+  <div class="lesson-group"><h2>เริ่มต้น</h2>
+    <button type="button" id="candleMode" aria-pressed="true"><span class="lesson-count">1</span> อ่านแท่งเทียน</button>
+    <button type="button" id="watchMode" aria-pressed="false"><span class="lesson-count">2</span> ดูเทรดจำลอง</button>
+    <button type="button" id="coachMode" aria-pressed="false"><span class="lesson-count">3</span> ฝึกเทรดกับ AI</button>
+  </div>
+  <div class="lesson-group"><h2>ปานกลาง</h2>
+    <button type="button" id="practiceMode" aria-pressed="false"><span class="lesson-count">4</span> ฝึกเข้า–ออกเอง</button>
+  </div>
+  <div class="lesson-group"><h2>ขั้นสูง</h2>
+    <button type="button" id="retestMode" aria-pressed="false"><span class="lesson-count">5</span> Breakout &amp; Retest</button>
+    <button type="button" id="planMode" aria-pressed="false"><span class="lesson-count">6</span> วางแผนล่วงหน้า</button>
+  </div>
+  <label class="lesson-picker">เลือกบทเรียน
+    <select id="lessonSelect">
+      <optgroup label="เริ่มต้น"><option value="candle">1 · อ่านแท่งเทียน</option><option value="demo">2 · ดูเทรดจำลอง</option><option value="coach">3 · ฝึกเทรดกับ AI</option></optgroup>
+      <optgroup label="ปานกลาง"><option value="practice">4 · ฝึกเข้า–ออกเอง</option></optgroup>
+      <optgroup label="ขั้นสูง"><option value="retest">5 · Breakout &amp; Retest</option><option value="plan">6 · วางแผนล่วงหน้า</option></optgroup>
+    </select>
+  </label>
+</nav>
+<div class="workspace-content">
+<header class="workspace-header">
+  <div><p id="lessonLevel"></p><h1 id="workspaceTitle" tabindex="-1"></h1><p id="lessonIntro"></p></div>
+  <button type="button" id="lessonNext">บทถัดไป</button>
+</header>
+<div class="reading-grid" id="candleLesson" hidden>
+<section><h2>ราคา 4 จุดในแท่งเดียว</h2>
+  <label>เลือกแท่งตัวอย่าง<select id="candleExample"><option value="0">ตัวอย่าง A</option><option value="1">ตัวอย่าง B</option><option value="2">ตัวอย่าง C</option></select></label>
+  <div class="candle-example">
+    <div class="candle-figure" id="candleFigure" aria-hidden="true"><span class="candle-wick"></span><span class="candle-body"></span></div>
+    <dl class="reading-values"><div><dt>เปิด (Open)</dt><dd id="candleOpen"></dd></div><div><dt>สูงสุด (High)</dt><dd id="candleHigh"></dd></div><div><dt>ต่ำสุด (Low)</dt><dd id="candleLow"></dd></div><div><dt>ปิด (Close)</dt><dd id="candleClose"></dd></div></dl>
+  </div>
+  <p><small>ตัวแท่งแสดงช่วงระหว่างราคาเปิดกับราคาปิด ไส้เทียนยื่นไปถึงจุดสูงสุดและต่ำสุด</small></p>
+  <form id="candleQuiz"><label>ราคาปิดเทียบกับราคาเปิดเป็นอย่างไร<select id="candleAnswer" required><option value="">เลือกคำตอบ</option><option value="up">ปิดสูงกว่าเปิด</option><option value="down">ปิดต่ำกว่าเปิด</option><option value="flat">ปิดเท่ากับเปิด</option></select></label>
+  <button type="submit" class="primary">ตรวจคำตอบ</button><output id="candleFeedback" aria-live="polite"></output></form>
+</section>
+<section class="reading-notes"><h2>รูปแบบที่พบในภาพอ้างอิง</h2>
+  <dl>
+    <dt>Hammer</dt><dd>ตัวแท่งอยู่ใกล้ด้านบนและมีไส้ล่างยาว ลองสังเกตว่าปรากฏหลังราคาลงหรือไม่</dd>
+    <dt>Bullish Engulfing</dt><dd>ตัวแท่งขาขึ้นครอบช่วงเปิดถึงปิดของแท่งขาลงก่อนหน้า</dd>
+    <dt>Morning Star</dt><dd>มีแท่งขาลง ตามด้วยแท่งตัวสั้น แล้วตามด้วยแท่งขาขึ้นที่ปิดกลับเข้าไปในช่วงตัวแท่งแรก</dd>
+  </dl>
+  <details><summary>ดูสรุปแท่งเทียนภาษาไทย</summary><figure><img alt="ภาพสรุปราคาเปิด ราคาปิด ไส้เทียน และตัวอย่างรูปแบบแท่งเทียนหนึ่งถึงสามแท่ง" width="399" height="501" loading="lazy" referrerpolicy="no-referrer" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT4wqjKrMoeuwv6R_oXCNrgts-PdTx1Daplo_yiOnIDJa8ETbk9baZmMJaV&amp;s=10"><figcaption><a href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT4wqjKrMoeuwv6R_oXCNrgts-PdTx1Daplo_yiOnIDJa8ETbk9baZmMJaV&amp;s=10" target="_blank" rel="noopener noreferrer">เปิดภาพต้นฉบับ</a></figcaption></figure></details>
+  <details><summary>ดูตัวอย่างรูปแบบแท่งเทียนขาขึ้น</summary><figure><img alt="ภาพอ้างอิงรูปแบบขาขึ้น เช่น Hammer, Bullish Engulfing และ Morning Star" width="800" height="800" loading="lazy" referrerpolicy="no-referrer" src="https://img.kwcdn.com/product/open/076ebd834c1d451aa53ee9e417637b80-goods.jpeg?imageView2/2/w/800/q/70/format/avif"><figcaption><a href="https://img.kwcdn.com/product/open/076ebd834c1d451aa53ee9e417637b80-goods.jpeg?imageView2/2/w/800/q/70/format/avif" target="_blank" rel="noopener noreferrer">เปิดภาพต้นฉบับ</a></figcaption></figure></details>
+</section>
+</div>
+<div class="reading-grid" id="retestLesson" hidden>
+<section><h2 id="retestTableTitle">ตัวอย่างแนวต้าน 2450.00</h2>
+  <table class="example-table" aria-labelledby="retestTableTitle"><thead><tr><th scope="col">แท่ง</th><th scope="col">ราคาต่ำสุด</th><th scope="col">ราคาปิด</th></tr></thead><tbody>
+    <tr><th scope="row">1</th><td>2448.30</td><td>2449.40</td></tr><tr><th scope="row">2</th><td>2449.25</td><td>2451.00</td></tr><tr><th scope="row">3</th><td>2449.95</td><td>2450.35</td></tr>
+  </tbody></table>
+  <form id="retestQuiz"><label>แท่งไหนกลับมาทดสอบระดับ 2450.00 หลังทะลุขึ้นไปแล้ว<select id="retestAnswer" required><option value="">เลือกคำตอบ</option><option value="1">แท่ง 1</option><option value="2">แท่ง 2</option><option value="3">แท่ง 3</option></select></label>
+  <button type="submit" class="primary">ตรวจคำตอบ</button><output id="retestFeedback" aria-live="polite"></output></form>
+</section>
+<section class="reading-notes"><h2>อ่านสองจังหวะ</h2>
+  <dl><dt>Breakout · ทะลุกรอบ</dt><dd>มองหาแท่งที่ปิดพ้นแนวรับหรือแนวต้านที่ทำเครื่องหมายไว้</dd>
+  <dt>Retest · กลับมาทดสอบ</dt><dd>ดูว่าราคาย้อนมาที่ระดับเดิมแล้วปิดอยู่ฝั่งไหน ถ้าย้อนกลับเข้ากรอบ ให้รอและประเมินใหม่ในแบบฝึกนี้</dd></dl>
+  <details><summary>ดูภาพตัวอย่าง Breakout &amp; Retest</summary><figure><img alt="ภาพตัวอย่างกราฟทะลุแนวต้าน เส้นแนวโน้ม และกรอบราคา แล้วกลับมาทดสอบ" width="800" height="800" loading="lazy" referrerpolicy="no-referrer" src="https://img.kwcdn.com/product/fmket/f241d4da6dadc540c5e7cda3c5ef19a6.jpg?imageView2/2/w/800/q/70/format/avif"><figcaption><a href="https://img.kwcdn.com/product/fmket/f241d4da6dadc540c5e7cda3c5ef19a6.jpg?imageView2/2/w/800/q/70/format/avif" target="_blank" rel="noopener noreferrer">เปิดภาพต้นฉบับ</a></figcaption></figure></details>
+</section>
+</div>
+<div id="simulationWorkspace">
 <section class="demo-controls" id="demoControls" hidden aria-label="ควบคุมการเล่นตัวอย่าง">
 <div class="row"><label>ตัวอย่างออเดอร์<select id="demoScenario"><option value="0">Buy แล้วปิดที่ Take Profit</option><option value="1">Sell แล้วปิดที่ Stop Loss</option><option value="2">Buy แล้วปิดก่อนถึงเป้า</option></select></label>
 <label>ความเร็วกราฟ<select id="demoSpeed"><option value="6000">6 วินาที / แท่ง</option><option value="4000" selected>4 วินาที / แท่ง</option><option value="2000">2 วินาที / แท่ง</option></select></label>
 <div class="demo-actions"><button type="button" class="primary" id="demoPlay">เล่นตัวอย่าง</button><button type="button" id="demoStep">แท่งถัดไป</button><button type="button" id="demoReset" disabled>เริ่มใหม่</button></div></div>
 </section>
 <div class="row training-nav" id="trainingNav"><button id="m5">M5</button><button id="m15">M15</button><button id="newCase">โจทย์ถัดไป</button></div>
-<section id="contextPanel"><h2>อ่านกราฟก่อนวางแผน</h2>
-<p id="context"></p>
-<details id="guide"><summary>เปิดคู่มือวางแผนและทบทวน</summary>
-<ol>
-<li><strong>ดูโครงสร้างบน M15</strong> มองหายอดและฐานที่ยกสูงขึ้น ลดต่ำลง หรือยังสลับกันในกรอบ แล้วทำเครื่องหมายบริเวณยอดและฐานเดิม</li>
-<li><strong>หาจังหวะบน M5</strong> ฝึกสังเกตว่าราคาทดสอบระดับเดิมแล้วปิดกลับเข้ากรอบ หรือทะลุระดับแล้วกลับมาทดสอบจากอีกด้าน อ่านไส้เทียนพร้อมตำแหน่งที่เกิด</li>
-<li><strong>กำหนดราคาเข้าและเงื่อนไขยกเลิกแผน</strong> ระบุว่าจะรอราคาใดและอะไรทำให้มุมมองใช้ไม่ได้ จากนั้นวาง SL ตามระดับนั้น และเลือก TP จากบริเวณที่ต้องการออก</li>
-<li><strong>เลือกข้ามได้</strong> หากอ่านโครงสร้างยังไม่ชัดหรือจุดออกอยู่ใกล้เกินไปเมื่อเทียบกับระยะ SL ให้จดเหตุผลและข้ามโจทย์</li>
-<li><strong>ทบทวนหลังออก</strong> เทียบผลเป็น R กับสิ่งที่เห็นก่อนเปิดแท่งถัดไป แล้วจดหนึ่งอย่างที่จะปรับในการฝึกรอบหน้า</li>
-</ol></details></section>
-<section id="trainingScenarios"><h2>แบบฝึกจำลอง 3 สถานการณ์</h2>
+<details id="trainingScenarios"><summary>เลือกสถานการณ์ฝึก</summary>
 <div class="row"><button type="button" data-training="0">1 · Buy หลังราคาฟื้น</button><button type="button" data-training="1">2 · Sell หลังราคาย่อลง</button><button type="button" data-training="2">3 · ราคาแกว่งในกรอบ</button></div>
-<output id="trainingHint" aria-live="polite">เลือกโจทย์เพื่อเริ่มฝึก ระบบจะกรอกแผนตัวอย่างให้ในโจทย์ Buy และ Sell</output></section>
+<output id="trainingHint" aria-live="polite"></output></details>
 <div class="layout"><section><h2 id="caption"></h2><canvas id="chart" aria-label="กราฟแท่งเทียนทองคำจำลองพร้อมเลขลำดับใต้แท่งเทียน"></canvas><p id="ohlc"></p>
 <div class="demo-legend" id="demoLegend" hidden><span>จุดเข้า</span><span>จุดออก</span></div>
 <aside id="coachPanel" hidden aria-labelledby="coachTitle">
@@ -115,8 +256,10 @@ body:has(#loginScreen[hidden]) #loginBackdrop{display:none}
 <div class="row"><button type="button" id="sampleBuy">กรอกตัวอย่าง Buy</button><button type="button" id="sampleSell">กรอกตัวอย่าง Sell</button></div>
 <label>ทิศทาง<select id="side"><option>Buy</option><option>Sell</option></select></label>
 <label><span id="entryLabel">ราคาเข้า (ราคาปิดล่าสุด)</span><input id="entry" type="number" step=".01" min=".01" required></label>
+<div class="risk-fields">
 <label>Stop Loss (SL)<input id="sl" type="number" step=".01" min=".01" required></label>
 <label>Take Profit (TP)<input id="tp" type="number" step=".01" min=".01" required></label>
+</div>
 <label>เหตุผลก่อนเข้า <textarea id="thesis" maxlength="400" placeholder="โครงสร้าง M15 · สัญญาณ M5 · ระดับที่ทำให้แผนใช้ไม่ได้"></textarea></label>
 <output id="rr"></output>
 <div class="row training-controls"><button class="primary" id="lock">เปิด Buy ที่ราคาปิด</button><button type="button" id="step" disabled>เปิดแท่งถัดไป</button><button type="button" id="exit" disabled>ปิดออเดอร์เอง</button></div>
@@ -124,7 +267,18 @@ body:has(#loginScreen[hidden]) #loginBackdrop{display:none}
 <button type="button" id="skip">บันทึกข้ามโจทย์</button>
 <div id="review" hidden><label>บทเรียนหลังจบโจทย์<textarea id="reflection" maxlength="400"></textarea></label><button id="saveReview" type="button">บันทึกบทเรียน</button><output id="reviewStatus" aria-live="polite"></output></div>
 </section></div>
-<section id="journalPanel"><h2>สมุดบันทึกผลฝึก</h2><small>สมุดบันทึกออนไลน์ของบัญชีนี้</small><ol id="journal"></ol></section></div></main>
+<section id="contextPanel"><h2>อ่านกราฟก่อนวางแผน</h2>
+<p id="context"></p>
+<details id="guide"><summary>เปิดคู่มือวางแผนและทบทวน</summary>
+<ol>
+<li><strong>ดูโครงสร้างบน M15</strong> มองหายอดและฐานที่ยกสูงขึ้น ลดต่ำลง หรือยังสลับกันในกรอบ แล้วทำเครื่องหมายบริเวณยอดและฐานเดิม</li>
+<li><strong>หาจังหวะบน M5</strong> ฝึกสังเกตว่าราคาทดสอบระดับเดิมแล้วปิดกลับเข้ากรอบ หรือทะลุระดับแล้วกลับมาทดสอบจากอีกด้าน อ่านไส้เทียนพร้อมตำแหน่งที่เกิด</li>
+<li><strong>กำหนดราคาเข้าและเงื่อนไขยกเลิกแผน</strong> ระบุว่าจะรอราคาใดและอะไรทำให้มุมมองใช้ไม่ได้ จากนั้นวาง SL ตามระดับนั้น และเลือก TP จากบริเวณที่ต้องการออก</li>
+<li><strong>เลือกข้ามได้</strong> หากอ่านโครงสร้างยังไม่ชัดหรือจุดออกอยู่ใกล้เกินไปเมื่อเทียบกับระยะ SL ให้จดเหตุผลและข้ามโจทย์</li>
+<li><strong>ทบทวนหลังออก</strong> เทียบผลเป็น R กับสิ่งที่เห็นก่อนเปิดแท่งถัดไป แล้วจดหนึ่งอย่างที่จะปรับในการฝึกรอบหน้า</li>
+</ol></details></section>
+<section id="journalPanel"><h2>สมุดบันทึกผลฝึก</h2><ol id="journal"></ol></section>
+</div></div></div></div></main>
 <script>
 'use strict';
 const $=id=>document.getElementById(id);
@@ -132,6 +286,24 @@ const fields=['side','entry','sl','tp','thesis'];
 const round=n=>Math.round(n*100)/100;
 const price=n=>n.toFixed(2);
 const formatR=n=>(n>=0?'+':'')+n.toFixed(2)+'R';
+const lessons=[
+  {mode:'candle',button:'candleMode',level:'เริ่มต้น',title:'อ่านแท่งเทียน',intro:'แยกราคาเปิด ราคาปิด จุดสูงสุด และจุดต่ำสุด แล้วลองตอบจากแท่งตัวอย่าง'},
+  {mode:'demo',button:'watchMode',level:'เริ่มต้น',title:'ดูเทรดจำลอง',intro:'กดเล่นตัวอย่าง แล้วตามดูว่าระบบเปิดออเดอร์ที่ราคาไหนและปิดเพราะอะไร'},
+  {mode:'coach',button:'coachMode',level:'เริ่มต้น',title:'ฝึกเทรดกับ AI',intro:'อ่านสัญญาณจาก AI แล้วลองใช้แผนตัวอย่างเพื่อเปิดและปิดออเดอร์เอง'},
+  {mode:'practice',button:'practiceMode',level:'ปานกลาง',title:'ฝึกเข้า–ออกเอง',intro:'เปิดกราฟทีละแท่ง เลือก Buy หรือ Sell และกำหนดจุดตัดขาดทุนกับเป้ากำไรด้วยตัวเอง'},
+  {mode:'retest',button:'retestMode',level:'ขั้นสูง',title:'Breakout & Retest',intro:'ฝึกแยกแท่งที่ทะลุแนวต้านออกจากแท่งที่ย้อนกลับมาทดสอบระดับเดิม'},
+  {mode:'plan',button:'planMode',level:'ขั้นสูง',title:'วางแผนล่วงหน้า',intro:'กำหนดราคาเข้าล่วงหน้า แล้วดูว่าเมื่อไรกราฟแตะระดับที่ทำให้ออเดอร์เริ่มทำงาน'}
+];
+const candleExamples=[
+  {o:2450,h:2453.2,l:2449.1,c:2452.6},
+  {o:2452.6,h:2453.1,l:2448.6,c:2449.7},
+  {o:2449.7,h:2451.6,l:2448.9,c:2449.7}
+];
+const candleAnswers={
+  up:{color:'#79e6c1',label:'ราคาปิดสูงกว่าราคาเปิด จึงเป็นแท่งขาขึ้น'},
+  down:{color:'#ff9b9e',label:'ราคาปิดต่ำกว่าราคาเปิด จึงเป็นแท่งขาลง'},
+  flat:{color:'#f3c675',label:'ราคาปิดเท่ากับราคาเปิด ตัวแท่งจึงบางเหมือนเส้น'}
+};
 const training=[
   {side:'Buy',hint:'อ่านไส้ล่างของแท่ง 32 แล้วดูแผน Buy กดล็อกแผนและเปิดแท่งถัดไปทีละแท่ง'},
   {side:'Sell',hint:'อ่านไส้บนของแท่ง 32 แล้วดูแผน Sell กดล็อกแผนและเปิดแท่งถัดไปทีละแท่ง'},
@@ -160,6 +332,7 @@ let trainingMode='practice', previousTraining=null, demoTimer=null;
 const isCoach=()=>trainingMode==='coach';
 const isPractice=()=>trainingMode==='practice'||isCoach();
 const isDemo=()=>trainingMode==='demo';
+const isReading=()=>trainingMode==='candle'||trainingMode==='retest';
 let coachWeights=null;
 let accountClient=null, accountUser=null, accountReady=false, accountVersion=0;
 let pendingSave=Promise.resolve();
@@ -200,16 +373,51 @@ function setup(){
   reviewIndex=-1;$('review').hidden=true;$('reviewStatus').textContent='';
   $('entry').readOnly=isPractice();
   $('entryLabel').textContent=isPractice()?'ราคาเข้า (ราคาปิดล่าสุด)':'ราคาเข้า';
-  $('tradeTitle').textContent=isPractice()?'ฝึกเข้า–ออกออเดอร์':'แผนเข้าและออก';
+  $('tradeTitle').textContent=isPractice()?'เปิดและปิดออเดอร์':'แผนเข้าและออก';
   $('practiceHelp').hidden=!isPractice();
   $('planHelp').hidden=isPractice();
-  for(const [id,mode] of [['watchMode','demo'],['coachMode','coach'],['practiceMode','practice'],['planMode','plan']])$(id).setAttribute('aria-pressed',String(trainingMode===mode));
+  renderLesson();
   for(const id of ['trainingNav','trainingScenarios','tradePanel','journalPanel'])$(id).hidden=isDemo();
   for(const id of ['contextPanel','chartQuiz'])$(id).hidden=isDemo()||isCoach();
   $('coachPanel').hidden=!isCoach();
   for(const id of ['demoControls','demoLegend','demoOrder'])$(id).hidden=!isDemo();
   for(const frame of [5,15]) $('m'+frame).classList.toggle('primary',frame===timeframe);
   update();
+}
+function currentLessonIndex(){
+  return lessons.findIndex(lesson=>lesson.mode===trainingMode);
+}
+function renderLesson(){
+  const index=currentLessonIndex(), lesson=lessons[index], nextLesson=lessons[index+1];
+  $('lessonLevel').textContent='บทที่ '+(index+1)+' จาก '+lessons.length+' · '+lesson.level;
+  $('workspaceTitle').textContent=lesson.title;
+  $('lessonIntro').textContent=lesson.intro;
+  $('lessonSelect').value=lesson.mode;
+  $('lessonNext').hidden=!nextLesson;
+  if(nextLesson)$('lessonNext').setAttribute('aria-label','บทถัดไป · '+nextLesson.title);
+  for(const {mode,button} of lessons)$(button).setAttribute('aria-pressed',String(trainingMode===mode));
+  $('candleLesson').hidden=trainingMode!=='candle';
+  $('retestLesson').hidden=trainingMode!=='retest';
+  $('simulationWorkspace').hidden=isReading();
+}
+function currentCandleExample(){
+  return candleExamples[Number($('candleExample').value)]||candleExamples[0];
+}
+function candleDirection({o,c}){
+  if(c>o)return 'up';
+  return c<o?'down':'flat';
+}
+function renderCandleExample(){
+  const candle=currentCandleExample();
+  const {o,h,l,c}=candle;
+  const figure=$('candleFigure');
+  const webHeight=80/(h-l);
+  figure.style.setProperty('--candle-top',(10+(h-Math.max(o,c))*webHeight)+'%');
+  figure.style.setProperty('--candle-height',(Math.abs(c-o)*webHeight)+'%');
+  figure.style.setProperty('--candle-color',candleAnswers[candleDirection(candle)].color);
+  for(const [id,value] of [['candleOpen',o],['candleHigh',h],['candleLow',l],['candleClose',c]])$(id).textContent=price(value);
+  $('candleAnswer').value='';
+  $('candleFeedback').textContent='';
 }
 function setPlanLocked(locked){
   for(const id of [...fields,...sampleButtons,'lock','skip'])$(id).disabled=locked;
@@ -562,6 +770,10 @@ function switchMode(mode){
     setupDemo();
     return;
   }
+  if(isReading()){
+    renderLesson();
+    return;
+  }
   if(activeTraining===null)setup();
   else startTraining(activeTraining);
 }
@@ -571,10 +783,29 @@ function switchCase(frame){
   if(frame!==undefined)timeframe=frame;else exercise++;
   setup();
 }
-$('watchMode').onclick=()=>switchMode('demo');
-$('coachMode').onclick=()=>switchMode('coach');
-$('practiceMode').onclick=()=>switchMode('practice');
-$('planMode').onclick=()=>switchMode('plan');
+for(const {mode,button} of lessons)$(button).onclick=()=>switchMode(mode);
+$('candleExample').onchange=renderCandleExample;
+$('candleQuiz').onsubmit=event=>{
+  event.preventDefault();
+  const direction=candleDirection(currentCandleExample());
+  const correct=$('candleAnswer').value===direction;
+  $('candleFeedback').textContent=(correct?'ถูกต้อง · ':'ลองเทียบอีกครั้ง · ')+candleAnswers[direction].label;
+};
+$('retestQuiz').onsubmit=event=>{
+  event.preventDefault();
+  const correct=$('retestAnswer').value==='3';
+  $('retestFeedback').textContent=(correct?'ถูกต้อง · ':'ลองอ่านอีกครั้ง · ')+'แท่ง 2 ปิดเหนือแนวต้าน จากนั้นแท่ง 3 ย่อลงมาใกล้ 2450.00 และปิดกลับเหนือระดับเดิม';
+};
+$('lessonSelect').onchange=()=>{
+  switchMode($('lessonSelect').value);
+  $('lessonSelect').value=trainingMode;
+};
+$('lessonNext').onclick=()=>{
+  const nextLesson=lessons[currentLessonIndex()+1];
+  if(!nextLesson)return;
+  switchMode(nextLesson.mode);
+  if(trainingMode===nextLesson.mode)$('workspaceTitle').focus();
+};
 $('demoScenario').onchange=setupDemo;
 $('demoSpeed').onchange=()=>{if(demoTimer!==null)startDemoTimer();};
 $('demoReset').onclick=setupDemo;
@@ -697,7 +928,12 @@ async function showAccount(user){
   timeframe=5;
   exercise=0;
   $('side').value='Buy';
-  setup();
+  order=null;
+  $('candleExample').value='0';
+  renderCandleExample();
+  $('retestAnswer').value='';
+  $('retestFeedback').textContent='';
+  if(user)switchMode('candle');else setup();
   renderHistory();
   $('loginScreen').hidden=Boolean(user);
   $('trainingScreen').hidden=!user;
@@ -716,7 +952,7 @@ async function showAccount(user){
   history=[...history,...(data||[])].slice(0,50);
   renderHistory();
   if(!order)for(const id of controls)$(id).disabled=false;
-  accountMessage(error?'โหลดประวัติออนไลน์ไม่สำเร็จ':'เข้าสู่ระบบแล้ว');
+  accountMessage(error?'โหลดประวัติออนไลน์ไม่สำเร็จ':'');
 }
 async function accountAction(action){
   setAccountBusy(true);
