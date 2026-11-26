@@ -32,8 +32,10 @@ body:has(#loginScreen[hidden]) #loginBackdrop{display:none}
 #tradeMark[data-tone="profit"]{color:#79e6c1}#tradeMark[data-tone="loss"]{color:#ff9b9e}
 #entry[readonly]{color:#f7c66b}
 #practiceHelp,#planHelp{margin:9px 0 12px}
-.demo-controls .row{align-items:end}.demo-controls label{flex:1 1 220px;margin:0}.demo-controls label:last-of-type{flex:0 1 170px}.demo-controls select,.demo-controls button{min-height:44px}
-.demo-actions{display:flex;flex-wrap:wrap;gap:8px}
+.demo-controls .row{display:grid;grid-template-columns:minmax(0,1fr) minmax(130px,165px) auto;gap:9px;align-items:end}
+.demo-controls label{min-width:0;margin:0}.demo-controls select,.demo-controls button{min-height:44px}
+.demo-actions{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(103px,1fr);gap:6px}
+.demo-actions button{min-width:0;padding-inline:7px}
 .demo-legend{display:flex;gap:14px;flex-wrap:wrap;color:#c4cbd7}
 .demo-legend span::before{content:'';display:inline-block;width:8px;height:8px;border-radius:50%;background:#f7c66b;margin-inline-end:6px}
 .demo-legend span:last-child::before{background:#d0b0ff}
@@ -46,6 +48,7 @@ body:has(#loginScreen[hidden]) #loginBackdrop{display:none}
 #coachPanel output{color:#f7c66b;font-weight:700}#coachPanel p{margin:7px 0 10px}
 #coachPlan{min-height:44px;margin:0 0 8px}
 
+html:has(#trainingScreen:not([hidden])){scrollbar-gutter:stable}
 body:has(#trainingScreen:not([hidden])){background:#0b1018}
 body:has(#trainingScreen:not([hidden])) main{max-width:1460px;padding:18px 24px 40px}
 #trainingScreen{--edge:#2c3646;--muted:#aebbc9;--gold:#f3c675;--paper:#141c29;--top:#1a2433}
@@ -72,21 +75,22 @@ body:has(#trainingScreen:not([hidden])) main{max-width:1460px;padding:18px 24px 
 .lesson-count{display:grid;place-items:center;flex:0 0 23px;height:23px;border-radius:6px;background:#263449;color:#ccd6e2;font-size:.78rem;font-variant-numeric:tabular-nums}
 .lesson-group button[aria-pressed="true"] .lesson-count{background:var(--gold);color:#221809}
 .lesson-picker{display:none}
-.workspace-header{display:flex;justify-content:space-between;align-items:end;gap:16px;padding:20px;background:linear-gradient(115deg,#242634 0%,#192637 100%);border:1px solid #394354;border-radius:14px}
+.workspace-header{display:grid;grid-template-columns:minmax(0,1fr) 105px;align-items:end;gap:16px;padding:20px;background:linear-gradient(115deg,#242634 0%,#192637 100%);border:1px solid #394354;border-radius:14px}
 .workspace-header h1{color:#f4f5f8;font-size:clamp(1.55rem,3vw,2.2rem);outline:none}
 #lessonLevel{margin:0 0 3px;color:var(--gold);font-size:.88rem;font-weight:750}
 #lessonIntro{margin:7px 0 0;color:#c7d1dd}
-#lessonNext{flex:0 0 auto;min-height:44px;border-color:#806238;color:#f4d79b;background:#302a27}
+#lessonNext{justify-self:end;min-height:44px;border-color:#806238;color:#f4d79b;background:#302a27}
 #lessonNext:hover{background:#41362a}
 .workspace-content section{margin-top:12px;padding:15px;background:var(--paper);border-color:var(--edge);border-radius:14px}
-.workspace-content .layout{grid-template-columns:minmax(0,1.7fr) minmax(270px,1fr);gap:12px;align-items:start}
+.workspace-content .layout{grid-template-columns:minmax(0,1.7fr) minmax(270px,1fr);gap:12px;align-items:start;overflow-anchor:none}
 .workspace-content .layout section{min-width:0}
 .workspace-content button:not(.primary),.workspace-content input,.workspace-content select,.workspace-content textarea,#accountToolbar button{border-color:#46546a;background-color:#202b3b}
 .workspace-content button.primary{background:var(--gold);border-color:var(--gold)}
 .workspace-content #lessonNext{border-color:#806238;background-color:#302a27}
 #caption{font-size:1rem;color:#edf1f7;font-variant-numeric:tabular-nums}
+#levelHint{min-block-size:2.3em;color:var(--muted);font-size:.85rem}
 #ohlc{margin:10px 0;color:var(--muted);font-size:.86rem;font-variant-numeric:tabular-nums}
-.workspace-content #chart{height:350px;border-radius:8px;background:#101722}
+.workspace-content #chart{width:100%;height:350px;border-radius:8px;background:#101722}
 .workspace-content #trainingNav{margin-top:12px}
 #trainingScenarios{margin-top:12px;padding:12px 15px;border:1px solid var(--edge);border-radius:12px;background:var(--paper)}
 #trainingScenarios .row{margin-top:10px}
@@ -132,35 +136,44 @@ body:has(#trainingScreen:not([hidden])) main{max-width:1460px;padding:18px 24px 
 }
 @media(max-width:1050px){
   .workspace-layout{grid-template-columns:190px minmax(0,1fr)}
-  .workspace-header{flex-wrap:wrap;align-items:center}
+  .demo-controls .row{grid-template-columns:minmax(0,1fr) minmax(130px,165px)}
+  .demo-actions{grid-column:1/-1;justify-self:start}
 }
-@media(max-width:880px){
+@media(max-width:880px),(pointer:coarse) and (max-width:1366px){
   body:has(#trainingScreen:not([hidden])) main{padding:12px 14px 26px}
   .workspace-layout{grid-template-columns:minmax(0,1fr);gap:10px}
-  .lesson-nav{padding:9px 12px}
+  .lesson-nav{position:static;max-height:none;overflow:visible;padding:9px 12px}
   .lesson-nav-title,.lesson-group{display:none}
   .lesson-picker{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);align-items:center;gap:8px;margin:0;color:#edf1f7;font-size:.88rem}
-  .lesson-picker select{min-height:44px;width:100%;font-size:16px}
+  .lesson-picker select{min-height:44px;width:100%;min-width:0;font-size:16px}
   .manual-nav{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:8px;padding-top:8px}
   .manual-nav button{text-align:center}
+}
+@media(min-width:721px) and (max-width:1050px){
+  .workspace-header{min-block-size:132px;align-items:center}
+  .workspace-content #chart{height:320px}
+}
+@media(max-width:720px),(pointer:coarse) and (max-width:1366px){
+  #trainingScreen :is(button,input,select){min-height:44px}
+  #trainingScreen :is(input,select,textarea){font-size:16px}
+  .phone-chart-controls{display:block;margin:10px 0}
+  .phone-chart-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+  .phone-chart-actions button{min-width:0;padding:8px 5px}
+  #phoneTradeStatus{min-block-size:2.7em;margin:7px 0;color:var(--muted);font-size:.85rem}
 }
 @media(max-width:720px){
   #signedIn{padding:9px 10px}
   #accountToolbar button{min-height:44px;padding:6px 9px;font-size:.86rem}
-  .workspace-header{gap:9px;padding:14px}
+  .workspace-header{grid-template-columns:minmax(0,1fr);gap:9px;padding:14px}
   #lessonIntro{font-size:.9rem}
-  #lessonNext{min-height:44px;font-size:.88rem}
+  #lessonNext{justify-self:start;min-height:44px;font-size:.88rem}
   .workspace-content .layout{grid-template-columns:minmax(0,1fr);gap:0}
   .reading-grid{grid-template-columns:minmax(0,1fr);gap:0}
   .workspace-content #chart{height:clamp(246px,72vw,340px)}
   .workspace-content section{padding:12px}
-  .demo-controls .row{display:grid;grid-template-columns:minmax(0,1fr);gap:9px}
-  .demo-actions,.phone-chart-actions{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:6px}
-  .demo-actions button,.phone-chart-actions button{min-width:0;padding:8px 5px}
-  .phone-chart-controls{display:block;margin:10px 0}
-  .phone-chart-actions button{min-height:44px}
-  #phoneTradeStatus{margin:7px 0;color:var(--muted);font-size:.85rem}
-  #phoneTradeStatus:empty{display:none}
+  .demo-controls .row{grid-template-columns:minmax(0,1fr)}
+  .demo-actions{grid-template-columns:repeat(3,minmax(0,1fr));justify-self:stretch}
+  .demo-actions button{min-height:50px;padding-inline:5px;font-size:.9rem}
   .manual-header{padding:10px 12px}
   #manualBody{padding:2px 12px 12px}
 }
@@ -429,6 +442,7 @@ let accountClient=null, accountUser=null, accountReady=false, accountVersion=0;
 let pendingSave=Promise.resolve();
 const sampleButtons=['sampleBuy','sampleSell'];
 let timeframe=5, exercise=0, bars=[], shown, order, pattern, history=[], reviewIndex=-1;
+let chartDrawPending=false;
 function renderHistory(){
   $('journal').replaceChildren();
   for(const record of history){
@@ -487,7 +501,7 @@ function renderLesson(){
   $('lessonLevel').textContent='บทที่ '+(index+1)+' จาก '+lessons.length+' · '+lesson.level;
   $('workspaceTitle').textContent=lesson.title;
   $('lessonIntro').textContent=lesson.intro;
-  $('lessonSelect').value=lesson.mode;
+  if($('lessonSelect').value!==lesson.mode)$('lessonSelect').value=lesson.mode;
   $('lessonNext').hidden=!nextLesson;
   if(nextLesson)$('lessonNext').setAttribute('aria-label','บทถัดไป · '+nextLesson.title);
   for(const {mode,button} of lessons)$(button).setAttribute('aria-pressed',String(trainingMode===mode));
@@ -646,7 +660,7 @@ function update(){
   $('ohlc').textContent='แท่งล่าสุด  เปิด '+price(b.o)+'  สูง '+price(b.h)+'  ต่ำ '+price(b.l)+'  ปิด '+price(b.c);
   if(isDemo()){
     renderDemo();
-    draw();
+    scheduleChartDraw();
     return;
   }
   $('caption').textContent+='/'+bars.length;
@@ -658,13 +672,21 @@ function update(){
   $('exit').disabled=order?.state!=='open';
   $('chartStep').disabled=$('step').disabled;
   $('chartExit').disabled=$('exit').disabled;
-  $('phoneTradeStatus').textContent=$('status').textContent;
   $('tradePhase').textContent={pending:'รอราคาเข้า',open:'เปิด '+p.side,done:'จบการฝึก'}[order?.state]||'รอจังหวะเข้า';
+  $('phoneTradeStatus').textContent=$('status').textContent||$('tradePhase').textContent;
   const result=order?.state==='open'?tradeR(b.c):order?.resultR;
   $('tradeMark').textContent=result===undefined?'ราคาปิด '+price(b.c):(order.state==='open'?'ผลลอยตัว ':'ผลปิด ')+formatR(result);
   $('tradeMark').dataset.tone=result>0?'profit':result<0?'loss':'';
   if(isCoach())renderCoach();else readContext();
-  draw();
+  scheduleChartDraw();
+}
+function scheduleChartDraw(){
+  if(chartDrawPending)return;
+  chartDrawPending=true;
+  window.requestAnimationFrame(()=>{
+    chartDrawPending=false;
+    draw();
+  });
 }
 const levelNames={support:'แนวรับ',resistance:'แนวต้าน'};
 const levelColors={support:'#70e7fc',resistance:'#ffab70'};
@@ -691,7 +713,7 @@ function renderMarkedLevels(){
     remove.onclick=()=>{
       markedLevels=markedLevels.filter(other=>other!==level);
       renderMarkedLevels();
-      draw();
+      scheduleChartDraw();
     };
     item.append(label,remove);
     list.append(item);
@@ -704,7 +726,7 @@ $('clearLevels').onclick=()=>{
   markedLevels=[];
   setMarkingMode(null);
   renderMarkedLevels();
-  draw();
+  scheduleChartDraw();
 };
 $('chart').onclick=event=>{
   if(!markingMode||!chartPlot)return;
@@ -718,15 +740,21 @@ $('chart').onclick=event=>{
   }
   setMarkingMode(null);
   renderMarkedLevels();
-  draw();
+  scheduleChartDraw();
 };
 function draw(){
   const canvas=$('chart'),w=canvas.clientWidth,h=canvas.clientHeight;
   chartPlot=null;
-  if(w<110||!bars.length)return;
+  if(w<110||h===0||!bars.length)return;
   const dpr=window.devicePixelRatio||1;
-  canvas.width=w*dpr;canvas.height=h*dpr;
-  const ctx=canvas.getContext('2d');ctx.scale(dpr,dpr);
+  const pixelWidth=Math.round(w*dpr),pixelHeight=Math.round(h*dpr);
+  if(canvas.width!==pixelWidth)canvas.width=pixelWidth;
+  if(canvas.height!==pixelHeight)canvas.height=pixelHeight;
+  const ctx=canvas.getContext('2d');
+  ctx.setTransform(pixelWidth/w,0,0,pixelHeight/h,0,0);
+  ctx.clearRect(0,0,w,h);
+  ctx.textAlign='left';
+  ctx.textBaseline='alphabetic';
   const visible=bars.slice(Math.max(0,shown-32),shown), p=order||(isDemo()?{}:readPlan());
   const demoLevels=isDemo()&&order?[order.sl,order.tp]:[];
   const low=Math.min(...visible.map(b=>b.l),...demoLevels),high=Math.max(...visible.map(b=>b.h),...demoLevels);
@@ -988,14 +1016,15 @@ $('retestQuiz').onsubmit=event=>{
   $('retestFeedback').textContent=(correct?'ถูกต้อง · ':'ลองอ่านอีกครั้ง · ')+'แท่ง 2 ปิดเหนือแนวต้าน จากนั้นแท่ง 3 ย่อลงมาใกล้ 2450.00 และปิดกลับเหนือระดับเดิม';
 };
 $('lessonSelect').onchange=()=>{
-  switchMode($('lessonSelect').value);
-  $('lessonSelect').value=trainingMode;
+  const picker=$('lessonSelect');
+  switchMode(picker.value);
+  if(picker.value!==trainingMode)picker.value=trainingMode;
 };
 $('lessonNext').onclick=()=>{
   const nextLesson=lessons[currentLessonIndex()+1];
   if(!nextLesson)return;
   switchMode(nextLesson.mode);
-  if(trainingMode===nextLesson.mode)$('workspaceTitle').focus();
+  if(trainingMode===nextLesson.mode)$('workspaceTitle').focus({preventScroll:true});
 };
 $('demoScenario').onchange=setupDemo;
 $('demoSpeed').onchange=()=>{if(demoTimer!==null)startDemoTimer();};
@@ -1070,7 +1099,8 @@ $('refreshTraining').onclick=async()=>{
   await pendingSave;
   window.location.reload();
 };
-window.addEventListener('resize',draw);
+window.addEventListener('resize',scheduleChartDraw);
+if(window.ResizeObserver)new window.ResizeObserver(scheduleChartDraw).observe($('chart'));
 setup();renderHistory();
 const accountConfig={url:'https://lfarepyluyfmnxnubzdr.supabase.co',publishableKey:"sb_publishable_uUFNOhjnFPrATayrxNB3Cg_qrQH_98_"};
 const accountMessage=message=>{$(accountUser?'trainingAccountStatus':'accountStatus').textContent=message;};
@@ -1136,7 +1166,7 @@ async function showAccount(user){
   $('accountStatus').textContent='';
   $('trainingAccountStatus').textContent='';
   if(!user){if(!recoveryMode)showLogin();return;}
-  draw();
+  scheduleChartDraw();
   const controls=['lock','skip'];
   for(const id of controls)$(id).disabled=true;
   const {data,error}=await accountClient.from('xau_training_journal').select('id,summary,thesis,reflection').eq('user_id',user.id).order('created_at',{ascending:false}).limit(50);
