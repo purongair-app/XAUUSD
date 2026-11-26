@@ -164,7 +164,7 @@ body:has(#trainingScreen:not([hidden])) main{max-width:1460px;padding:18px 24px 
   .manual-header{padding:10px 12px}
   #manualBody{padding:2px 12px 12px}
 }
-.guide-patterns{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,235px),1fr));gap:12px;margin:12px 0}.guide-card{background:#121722;border:1px solid #384354;border-radius:12px;padding:14px}.guide-card h3{margin:10px 0 4px;font-size:16px;overflow-wrap:anywhere}.guide-card p{margin:0;font-size:14px}.guide-chart{position:relative;height:132px;border-radius:8px;background:repeating-linear-gradient(to bottom,#283246 0 1px,transparent 1px 25%);overflow:hidden}.guide-candle{position:absolute;inset:0 auto 0 var(--x);color:#ff7585;width:clamp(12px,4vw,24px);transform:translateX(-50%);z-index:1}.guide-candle.up{color:#50e0ad}.guide-candle.context{opacity:.45}.guide-candle:before{content:"";position:absolute;left:calc(50% - 1px);top:var(--high);height:var(--wick);width:2px;background:currentColor}.guide-candle i{position:absolute;inset:var(--top) 0 auto;background:currentColor;height:var(--body);min-height:2px;border-radius:2px}.guide-level{position:absolute;inset:var(--level) 0 auto;border-top:2px dashed #f7c66b}</style>
+.guide-patterns{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,235px),1fr));gap:12px;margin:12px 0}.guide-card{background:#121722;border:1px solid #384354;border-radius:12px;padding:14px}.guide-card h3{margin:10px 0 4px;font-size:16px;overflow-wrap:anywhere}.guide-card p{margin:0;font-size:14px}.guide-chart{position:relative;height:132px;border-radius:8px;background:repeating-linear-gradient(to bottom,#283246 0 1px,transparent 1px 25%);overflow:hidden}.guide-candle{position:absolute;inset:0 auto 0 var(--x);color:#ff7585;width:clamp(12px,4vw,24px);transform:translateX(-50%);z-index:1}.guide-candle.up{color:#50e0ad}.guide-candle.context{opacity:.45}.guide-candle:before{content:"";position:absolute;left:calc(50% - 1px);top:var(--high);height:var(--wick);width:2px;background:currentColor}.guide-candle i{position:absolute;inset:var(--top) 0 auto;background:currentColor;height:var(--body);min-height:2px;border-radius:2px}.guide-level{position:absolute;inset:var(--level) 0 auto;border-top:2px dashed #f7c66b}#levelTools{margin:8px 0}.level-tool[aria-pressed="true"]{background:#f7c66b;border-color:#f7c66b;color:#172030}#chart[data-marking]{cursor:crosshair}#markedLevels{padding-left:0;list-style:none}#markedLevels:empty{display:none}#markedLevels li{display:flex;align-items:center;gap:10px}#markedLevels button{padding:4px 10px;min-height:34px}</style>
 <div id="loginBackdrop" aria-hidden="true"><span style="--x:3%;--y:72%;--wick:8%"></span><span style="--x:7.1%;--y:66%;--wick:15%"></span><span class="down" style="--x:11.2%;--y:68%;--wick:14%"></span><span style="--x:15.299999999999999%;--y:58%;--wick:13%"></span><span style="--x:19.4%;--y:53%;--wick:12%"></span><span class="down" style="--x:23.5%;--y:56%;--wick:11%"></span><span style="--x:27.599999999999998%;--y:48%;--wick:10%"></span><span style="--x:31.699999999999996%;--y:42%;--wick:9%"></span><span class="down" style="--x:35.8%;--y:45%;--wick:8%"></span><span style="--x:39.9%;--y:35%;--wick:15%"></span><span style="--x:44%;--y:30%;--wick:14%"></span><span class="down" style="--x:48.099999999999994%;--y:37%;--wick:13%"></span><span class="down" style="--x:52.199999999999996%;--y:40%;--wick:12%"></span><span class="down" style="--x:56.3%;--y:47%;--wick:11%"></span><span style="--x:60.39999999999999%;--y:41%;--wick:10%"></span><span style="--x:64.5%;--y:32%;--wick:9%"></span><span style="--x:68.6%;--y:25%;--wick:8%"></span><span class="down" style="--x:72.69999999999999%;--y:28%;--wick:15%"></span><span style="--x:76.8%;--y:18%;--wick:14%"></span><span class="down" style="--x:80.89999999999999%;--y:20%;--wick:13%"></span><span style="--x:85%;--y:12%;--wick:12%"></span><span class="down" style="--x:89.1%;--y:15%;--wick:11%"></span><span style="--x:93.19999999999999%;--y:8%;--wick:10%"></span><span class="down" style="--x:97.3%;--y:11%;--wick:9%"></span></div><main><section id="loginScreen" aria-label="เข้าสู่ระบบ Trading Lab">
 <p class="brand">PUROnGXAU</p>
 <h1 id="loginTitle">เข้าสู่ระบบ</h1><p id="loginIntro">เข้าสู่ระบบเพื่อเริ่มฝึกและดูสมุดบันทึกของคุณ</p>
@@ -276,7 +276,13 @@ body:has(#trainingScreen:not([hidden])) main{max-width:1460px;padding:18px 24px 
 <details id="trainingScenarios"><summary>เลือกสถานการณ์ฝึก</summary>
 <div class="row"><button type="button" data-training="0">1 · Buy หลังราคาฟื้น</button><button type="button" data-training="1">2 · Sell หลังราคาย่อลง</button><button type="button" data-training="2">3 · ราคาแกว่งในกรอบ</button></div>
 <output id="trainingHint" aria-live="polite"></output></details>
-<div class="layout"><section><h2 id="caption"></h2><canvas id="chart" aria-label="กราฟแท่งเทียนทองคำจำลองพร้อมเลขลำดับใต้แท่งเทียน"></canvas><p id="ohlc"></p>
+<div class="layout"><section><h2 id="caption"></h2><div id="levelTools" class="row" aria-label="เครื่องมือตีเส้นบนกราฟ">
+<button type="button" class="level-tool" id="markSupport" aria-pressed="false">+ แนวรับ</button>
+<button type="button" class="level-tool" id="markResistance" aria-pressed="false">+ แนวต้าน</button>
+<button type="button" id="clearLevels" disabled>ล้างเส้น</button>
+</div>
+<div id="levelHint" role="status"><small>เลือกแนวรับหรือแนวต้าน แล้วแตะระดับราคาบนกราฟ</small></div>
+<canvas id="chart" aria-label="กราฟแท่งเทียนทองคำจำลองพร้อมเลขลำดับใต้แท่งเทียน"></canvas><ul id="markedLevels" aria-label="รายการแนวรับและแนวต้าน"></ul><p id="ohlc"></p>
 <div class="demo-legend" id="demoLegend" hidden><span>จุดเข้า</span><span>จุดออก</span></div>
 <div class="phone-chart-controls" id="phoneChartControls" role="group" aria-label="ควบคุมออเดอร์ใต้กราฟ">
   <div class="phone-chart-actions"><button type="button" id="chartStep">เปิดแท่งถัดไป</button><button type="button" id="chartExit" disabled>ปิดออเดอร์เอง</button></div>
@@ -451,6 +457,9 @@ function setup(){
   const shift=last.c-bars[32].o;
   for(const bar of bars.slice(32)) for(const field of ['o','c','h','l']) bar[field]=round(bar[field]+shift);
   shown=32;order=null;
+  markedLevels=[];
+  setMarkingMode(null);
+  renderMarkedLevels();
   $('trainingHint').textContent=activeTraining===null?'เลือกหนึ่งในสามสถานการณ์ หรือกดโจทย์ถัดไปเพื่อเปลี่ยนกราฟจำลอง':training[activeTraining].hint;
   setPlanLocked(false);
   ['entry','sl','tp','answer','thesis','reflection'].forEach(id=>$(id).value='');
@@ -657,8 +666,63 @@ function update(){
   if(isCoach())renderCoach();else readContext();
   draw();
 }
+const levelNames={support:'แนวรับ',resistance:'แนวต้าน'};
+const levelColors={support:'#70e7fc',resistance:'#ffab70'};
+let markedLevels=[], markingMode=null, chartPlot=null;
+function setMarkingMode(mode){
+  markingMode=mode;
+  $('markSupport').setAttribute('aria-pressed',String(mode==='support'));
+  $('markResistance').setAttribute('aria-pressed',String(mode==='resistance'));
+  $('chart').toggleAttribute('data-marking',Boolean(mode));
+  $('levelHint').textContent=mode?'แตะกราฟที่ระดับราคาที่ต้องการวาง'+levelNames[mode]:'เลือกแนวรับหรือแนวต้าน แล้วแตะระดับราคาบนกราฟ';
+}
+function renderMarkedLevels(){
+  const list=$('markedLevels');
+  list.replaceChildren();
+  for(const level of markedLevels){
+    const item=document.createElement('li');
+    const label=document.createElement('span');
+    label.textContent=levelNames[level.type]+' '+price(level.value);
+    label.style.color=levelColors[level.type];
+    const remove=document.createElement('button');
+    remove.type='button';
+    remove.textContent='ลบ';
+    remove.setAttribute('aria-label','ลบ'+label.textContent);
+    remove.onclick=()=>{
+      markedLevels=markedLevels.filter(other=>other!==level);
+      renderMarkedLevels();
+      draw();
+    };
+    item.append(label,remove);
+    list.append(item);
+  }
+  $('clearLevels').disabled=markedLevels.length===0;
+}
+$('markSupport').onclick=()=>setMarkingMode(markingMode==='support'?null:'support');
+$('markResistance').onclick=()=>setMarkingMode(markingMode==='resistance'?null:'resistance');
+$('clearLevels').onclick=()=>{
+  markedLevels=[];
+  setMarkingMode(null);
+  renderMarkedLevels();
+  draw();
+};
+$('chart').onclick=event=>{
+  if(!markingMode||!chartPlot)return;
+  const bounds=$('chart').getBoundingClientRect();
+  const x=event.clientX-bounds.left, y=event.clientY-bounds.top;
+  const {width,bottom,ceiling,range}=chartPlot;
+  if(x<0||x>width||y<10||y>bottom)return;
+  const value=round(ceiling-(y-10)/(bottom-10)*range);
+  if(!markedLevels.some(level=>level.type===markingMode&&level.value===value)){
+    markedLevels.push({type:markingMode,value});
+  }
+  setMarkingMode(null);
+  renderMarkedLevels();
+  draw();
+};
 function draw(){
   const canvas=$('chart'),w=canvas.clientWidth,h=canvas.clientHeight;
+  chartPlot=null;
   if(w<110||!bars.length)return;
   const dpr=window.devicePixelRatio||1;
   canvas.width=w*dpr;canvas.height=h*dpr;
@@ -674,7 +738,11 @@ function draw(){
   const numberWidth=ctx.measureText(String(shown)).width;
   const numberRows=Math.ceil((numberWidth+4)/width);
   const plotBottom=h-12*numberRows-8;
-  const y=n=>10+(high+margin-n)/(span+margin*2)*(plotBottom-10);
+  const marks=markedLevels.map(level=>level.value);
+  const ceiling=Math.max(high+margin,...marks), floor=Math.min(low-margin,...marks);
+  const range=ceiling-floor;
+  chartPlot={width:chartW,bottom:plotBottom,ceiling,range};
+  const y=n=>10+(ceiling-n)/range*(plotBottom-10);
   ctx.font='11px system-ui';
   for(let i=0;i<=5;i++){
     const level=low+(high-low)*i/5, pos=y(level);
@@ -686,6 +754,14 @@ function draw(){
     ctx.strokeStyle=color;ctx.beginPath();ctx.moveTo(x,y(b.h));ctx.lineTo(x,y(b.l));ctx.stroke();
     ctx.fillStyle=color;ctx.fillRect(x-width*.29,Math.min(y(b.o),y(b.c)),width*.58,Math.max(1,Math.abs(y(b.o)-y(b.c))));
   });
+  for(const level of markedLevels){
+    const pos=y(level.value);
+    ctx.strokeStyle=levelColors[level.type];
+    ctx.setLineDash([7,4]);
+    ctx.beginPath();ctx.moveTo(0,pos);ctx.lineTo(chartW,pos);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle=levelColors[level.type];
+    ctx.fillText(price(level.value),chartW+4,Math.max(11,Math.min(plotBottom-2,pos+4)));
+  }
   for(const [key,color,label] of [['entry',entryColor,'เข้า'],['sl','#ff8385','SL'],['tp','#52d5aa','TP']]){
     const pos=y(p[key]);if(!(pos>=10&&pos<=plotBottom))continue;
     ctx.strokeStyle=color;ctx.setLineDash([4,4]);ctx.beginPath();ctx.moveTo(0,pos);ctx.lineTo(chartW,pos);ctx.stroke();ctx.setLineDash([]);
