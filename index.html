@@ -35,7 +35,7 @@ body:has(#loginScreen[hidden]) #loginBackdrop{display:none}
 #tradeMark[data-tone="profit"]{color:#79e6c1}#tradeMark[data-tone="loss"]{color:#ff9b9e}
 #entry[readonly]{color:#f7c66b}
 #practiceHelp,#planHelp{margin:9px 0 12px}
-.demo-controls .row{align-items:end}.demo-controls label{flex:1 1 220px;margin:0}.demo-controls select,.demo-controls button{min-height:44px}
+.demo-controls .row{align-items:end}.demo-controls label{flex:1 1 220px;margin:0}.demo-controls label:last-of-type{flex:0 1 170px}.demo-controls select,.demo-controls button{min-height:44px}
 .demo-actions{display:flex;flex-wrap:wrap;gap:8px}
 .demo-legend{display:flex;gap:14px;flex-wrap:wrap;color:#c4cbd7}
 .demo-legend span::before{content:'';display:inline-block;width:8px;height:8px;border-radius:50%;background:#f7c66b;margin-inline-end:6px}
@@ -44,6 +44,10 @@ body:has(#loginScreen[hidden]) #loginBackdrop{display:none}
 .demo-order{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:15px 0}.demo-order div{padding:9px 11px;border:1px solid #343d4e;border-radius:8px}
 .demo-order dt{color:#c4cbd7;font-size:.85rem}.demo-order dd{margin:4px 0 0;font-variant-numeric:tabular-nums}.demo-order .event{grid-column:1/-1}
 #demoResult[data-tone="profit"]{color:#79e6c1}#demoResult[data-tone="loss"]{color:#ff9b9e}
+#coachPanel{padding:14px;border:1px solid #343d4e;border-radius:10px;background:#111721}
+#coachPanel .row{align-items:center;justify-content:space-between}#coachPanel h3{margin:0;font-size:1rem}
+#coachPanel output{color:#f7c66b;font-weight:700}#coachPanel p{margin:7px 0 10px}
+#coachPlan{min-height:44px;margin:0 0 8px}
 </style>
 <div id="loginBackdrop" aria-hidden="true"><span style="--x:3%;--y:72%;--wick:8%"></span><span style="--x:7.1%;--y:66%;--wick:15%"></span><span class="down" style="--x:11.2%;--y:68%;--wick:14%"></span><span style="--x:15.299999999999999%;--y:58%;--wick:13%"></span><span style="--x:19.4%;--y:53%;--wick:12%"></span><span class="down" style="--x:23.5%;--y:56%;--wick:11%"></span><span style="--x:27.599999999999998%;--y:48%;--wick:10%"></span><span style="--x:31.699999999999996%;--y:42%;--wick:9%"></span><span class="down" style="--x:35.8%;--y:45%;--wick:8%"></span><span style="--x:39.9%;--y:35%;--wick:15%"></span><span style="--x:44%;--y:30%;--wick:14%"></span><span class="down" style="--x:48.099999999999994%;--y:37%;--wick:13%"></span><span class="down" style="--x:52.199999999999996%;--y:40%;--wick:12%"></span><span class="down" style="--x:56.3%;--y:47%;--wick:11%"></span><span style="--x:60.39999999999999%;--y:41%;--wick:10%"></span><span style="--x:64.5%;--y:32%;--wick:9%"></span><span style="--x:68.6%;--y:25%;--wick:8%"></span><span class="down" style="--x:72.69999999999999%;--y:28%;--wick:15%"></span><span style="--x:76.8%;--y:18%;--wick:14%"></span><span class="down" style="--x:80.89999999999999%;--y:20%;--wick:13%"></span><span style="--x:85%;--y:12%;--wick:12%"></span><span class="down" style="--x:89.1%;--y:15%;--wick:11%"></span><span style="--x:93.19999999999999%;--y:8%;--wick:10%"></span><span class="down" style="--x:97.3%;--y:11%;--wick:9%"></span></div><main><section id="loginScreen" aria-label="เข้าสู่ระบบ Trading Lab">
 <p class="brand">XAUUSD TRADING LAB</p>
@@ -72,9 +76,10 @@ body:has(#loginScreen[hidden]) #loginBackdrop{display:none}
 <p id="forgotBackRow" class="signup-row" hidden><button type="button" class="account-link" id="forgotBack">กลับไปเข้าสู่ระบบ</button></p>
 <form id="recoveryForm" hidden><label>รหัสผ่านใหม่<input id="newPassword" type="password" autocomplete="new-password" minlength="8" required></label><button class="login-primary" id="savePassword">บันทึกรหัสผ่านใหม่</button></form>
 <output id="accountStatus" aria-live="polite"></output></section><div id="trainingScreen" hidden inert><div id="signedIn" hidden><p id="accountName"></p><div id="accountToolbar"><button type="button" id="refreshTraining">รีเฟรช</button><button type="button" id="signOut">ออกจากระบบ</button></div></div><output id="trainingAccountStatus" aria-live="polite"></output><header><h1>XAUUSD Trading Lab</h1><p>ฝึกอ่านแท่งเทียน วางแผนเข้าออก และทดสอบแผนด้วยข้อมูลจำลอง</p></header>
-<nav class="training-modes" aria-label="โหมดฝึกเทรด"><button type="button" id="watchMode" aria-pressed="false">ดูเทรดจำลอง</button><button type="button" id="practiceMode" aria-pressed="true">ฝึกเข้า–ออกออเดอร์</button><button type="button" id="planMode" aria-pressed="false">วางแผนล่วงหน้า</button></nav>
+<nav class="training-modes" aria-label="โหมดฝึกเทรด"><button type="button" id="watchMode" aria-pressed="false">ดูเทรดจำลอง</button><button type="button" id="coachMode" aria-pressed="false">ฝึกเทรดกับ AI</button><button type="button" id="practiceMode" aria-pressed="true">ฝึกเข้า–ออกออเดอร์</button><button type="button" id="planMode" aria-pressed="false">วางแผนล่วงหน้า</button></nav>
 <section class="demo-controls" id="demoControls" hidden aria-label="ควบคุมการเล่นตัวอย่าง">
 <div class="row"><label>ตัวอย่างออเดอร์<select id="demoScenario"><option value="0">Buy แล้วปิดที่ Take Profit</option><option value="1">Sell แล้วปิดที่ Stop Loss</option><option value="2">Buy แล้วปิดก่อนถึงเป้า</option></select></label>
+<label>ความเร็วกราฟ<select id="demoSpeed"><option value="6000">6 วินาที / แท่ง</option><option value="4000" selected>4 วินาที / แท่ง</option><option value="2000">2 วินาที / แท่ง</option></select></label>
 <div class="demo-actions"><button type="button" class="primary" id="demoPlay">เล่นตัวอย่าง</button><button type="button" id="demoStep">แท่งถัดไป</button><button type="button" id="demoReset" disabled>เริ่มใหม่</button></div></div>
 </section>
 <div class="row training-nav" id="trainingNav"><button id="m5">M5</button><button id="m15">M15</button><button id="newCase">โจทย์ถัดไป</button></div>
@@ -93,6 +98,12 @@ body:has(#loginScreen[hidden]) #loginBackdrop{display:none}
 <output id="trainingHint" aria-live="polite">เลือกโจทย์เพื่อเริ่มฝึก ระบบจะกรอกแผนตัวอย่างให้ในโจทย์ Buy และ Sell</output></section>
 <div class="layout"><section><h2 id="caption"></h2><canvas id="chart" aria-label="กราฟแท่งเทียนทองคำจำลองพร้อมเลขลำดับใต้แท่งเทียน"></canvas><p id="ohlc"></p>
 <div class="demo-legend" id="demoLegend" hidden><span>จุดเข้า</span><span>จุดออก</span></div>
+<aside id="coachPanel" hidden aria-labelledby="coachTitle">
+<div class="row"><h3 id="coachTitle">สัญญาณฝึกจาก AI</h3><small id="coachTime"></small></div>
+<output id="coachSignal" aria-live="polite"></output><p id="coachReading"></p>
+<button type="button" id="coachPlan">กรอกแผนฝึกจาก AI</button>
+<div><small>โมเดลในเบราว์เซอร์ประเมินแท่งถัดไปจากข้อมูลกราฟจำลอง</small></div>
+</aside>
 <div id="chartQuiz"><label>อ่านแท่งที่ 32 ก่อนเปิดเฉลย<select id="answer"><option value="">เลือกคำตอบ</option><option value="bull">ไส้ล่างยาวและราคาปิดเหนือราคาเปิด</option><option value="bear">ไส้บนยาวและราคาปิดต่ำกว่าราคาเปิด</option><option value="flat">ตัวแท่งสั้นและมีไส้ทั้งสองด้าน</option></select></label><button id="check">ตรวจคำตอบ</button><output id="lesson" aria-live="polite"></output></div></section>
 <section id="demoOrder" hidden aria-labelledby="demoTitle"><h2 id="demoTitle">ออเดอร์จำลอง</h2><output id="demoPhase" aria-live="polite"></output>
 <dl class="demo-order"><div class="event"><dt>เข้าออเดอร์</dt><dd id="demoEntry">—</dd></div><div><dt>Stop Loss (SL)</dt><dd id="demoSL">—</dd></div><div><dt>Take Profit (TP)</dt><dd id="demoTP">—</dd></div><div class="event"><dt>ออกออเดอร์</dt><dd id="demoExit">—</dd></div><div class="event"><dt>ผลเทียบกับความเสี่ยง (R)</dt><dd id="demoResult">—</dd></div></dl>
@@ -126,15 +137,30 @@ const training=[
   {side:'Sell',hint:'อ่านไส้บนของแท่ง 32 แล้วดูแผน Sell กดล็อกแผนและเปิดแท่งถัดไปทีละแท่ง'},
   {side:null,hint:'แท่ง 32 เปิดและปิดใกล้กัน ลองตรวจคำตอบ แล้วจดเหตุผลว่าทำไมจึงจะรอ ก่อนกดบันทึกข้ามโจทย์'}
 ];
+const demoReward=5;
 const demos=[
-  {exercise:0,side:'Buy',signal:'แท่ง 32 มีไส้ล่างยาวและปิดเหนือราคาเปิด ตัวอย่างจึงเปิด Buy ที่ราคาปิด'},
-  {exercise:1,side:'Sell',signal:'แท่ง 32 มีไส้บนยาวและปิดต่ำกว่าราคาเปิด ตัวอย่างจึงเปิด Sell ที่ราคาปิด'},
-  {exercise:0,side:'Buy',signal:'แท่ง 32 ฟื้นจากจุดต่ำ ตัวอย่างเปิด Buy แล้วสาธิตการปิดที่ราคาปิดของแท่งถัดไป',closeEarly:true}
+  {
+    exercise:0, side:'Buy',
+    signal:'แท่ง 32 มีไส้ล่างยาวและปิดเหนือราคาเปิด ตัวอย่างเปิด Buy ที่ราคาปิด แล้วถือผ่านช่วงย่อตัวไปถึง TP',
+    moves:[.25,.65,.8,.45,1.15,1.7,1.4,2.2,2.8,2.55,3.15,3.8,4.45,demoReward]
+  },
+  {
+    exercise:1, side:'Sell',
+    signal:'แท่ง 32 มีไส้บนยาวและปิดต่ำกว่าราคาเปิด ตัวอย่างเปิด Sell ที่ราคาปิด ก่อนราคากลับตัวไปถึง SL',
+    moves:[.2,.45,.95,.6,1.02,.72,.3,.5,.1,-.25,-.52,-.7,-1]
+  },
+  {
+    exercise:0, side:'Buy', closeEarly:true,
+    signal:'แท่ง 32 ฟื้นจากจุดต่ำ ตัวอย่างเปิด Buy ที่ราคาปิด ถืออีก 10 แท่ง แล้วปิดก่อนถึง TP',
+    moves:[.3,.55,.28,.76,1.35,1.2,1.7,1.49,1.85,2.2]
+  }
 ];
 let activeTraining=null;
 let trainingMode='practice', previousTraining=null, demoTimer=null;
-const isPractice=()=>trainingMode==='practice';
+const isCoach=()=>trainingMode==='coach';
+const isPractice=()=>trainingMode==='practice'||isCoach();
 const isDemo=()=>trainingMode==='demo';
+let coachWeights=null;
 let accountClient=null, accountUser=null, accountReady=false, accountVersion=0;
 let pendingSave=Promise.resolve();
 const sampleButtons=['sampleBuy','sampleSell'];
@@ -146,16 +172,20 @@ function renderHistory(){
   }
   if(!history.length){const item=document.createElement('li');item.textContent='ยังไม่มีผลฝึก';$('journal').append(item);}
 }
-function setup(){
-  const scale=timeframe===15?1.7:1;
-  let seed=12457+exercise*107+timeframe*197;
+function makeCandles(caseNumber,frame,seedOffset=0){
+  const scale=frame===15?1.7:1;
+  let seed=12457+caseNumber*107+frame*197+seedOffset;
   const random=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};
-  let close=2450+exercise%20*3;
-  bars=Array.from({length:48},(_,i)=>{
+  let close=2450+caseNumber%20*3;
+  return Array.from({length:48},(_,i)=>{
     let o=close;
-    close=round(o+(Math.sin(i/4+exercise)*.65+(random()-.5)*3)*scale);
+    close=round(o+(Math.sin(i/4+caseNumber)*.65+(random()-.5)*3)*scale);
     return {o,c:close,h:round(Math.max(o,close)+(.2+random())*scale),l:round(Math.min(o,close)-(.2+random())*scale)};
   });
+}
+function setup(){
+  const scale=timeframe===15?1.7:1;
+  bars=makeCandles(exercise,timeframe);
   const last=bars[31], k=last.o;
   pattern=['bull','bear','flat'][exercise%3];
   const offsets={bull:[.48,.68,-2.4],bear:[-.48,2.4,-.68],flat:[.05,1.1,-1.1]}[pattern];
@@ -173,8 +203,10 @@ function setup(){
   $('tradeTitle').textContent=isPractice()?'ฝึกเข้า–ออกออเดอร์':'แผนเข้าและออก';
   $('practiceHelp').hidden=!isPractice();
   $('planHelp').hidden=isPractice();
-  for(const [id,mode] of [['watchMode','demo'],['practiceMode','practice'],['planMode','plan']])$(id).setAttribute('aria-pressed',String(trainingMode===mode));
-  for(const id of ['trainingNav','contextPanel','trainingScenarios','chartQuiz','tradePanel','journalPanel'])$(id).hidden=isDemo();
+  for(const [id,mode] of [['watchMode','demo'],['coachMode','coach'],['practiceMode','practice'],['planMode','plan']])$(id).setAttribute('aria-pressed',String(trainingMode===mode));
+  for(const id of ['trainingNav','trainingScenarios','tradePanel','journalPanel'])$(id).hidden=isDemo();
+  for(const id of ['contextPanel','chartQuiz'])$(id).hidden=isDemo()||isCoach();
+  $('coachPanel').hidden=!isCoach();
   for(const id of ['demoControls','demoLegend','demoOrder'])$(id).hidden=!isDemo();
   for(const frame of [5,15]) $('m'+frame).classList.toggle('primary',frame===timeframe);
   update();
@@ -182,12 +214,12 @@ function setup(){
 function setPlanLocked(locked){
   for(const id of [...fields,...sampleButtons,'lock','skip'])$(id).disabled=locked;
 }
-function samplePlan(side){
+function samplePlan(side,reward=2){
   const bar=bars[shown-1];
   const entry=bar.c;
   const distance=Math.max(0.5,round((bar.h-bar.l)/2));
   const direction=side==='Buy'?1:-1;
-  return {entry,sl:round(entry-direction*distance),tp:round(entry+direction*distance*2),distance};
+  return {entry,sl:round(entry-direction*distance),tp:round(entry+direction*distance*reward),distance};
 }
 function fillSample(side){
   if(order)return;
@@ -256,6 +288,54 @@ function readContext(){
   const observation=latest.high>earlier.high&&latest.low>earlier.low?'กรอบล่าสุดมีทั้งจุดสูงและจุดต่ำสูงขึ้น':latest.high<earlier.high&&latest.low<earlier.low?'กรอบล่าสุดมีทั้งจุดสูงและจุดต่ำต่ำลง':'จุดสูงและจุดต่ำยังไม่ขยับไปทางเดียวกัน';
   $('context').textContent='M15 · เปรียบเทียบแท่งที่ปิดแล้ว 4 แท่งก่อนหน้า ('+price(earlier.low)+'–'+price(earlier.high)+') กับ 4 แท่งล่าสุด ('+price(latest.low)+'–'+price(latest.high)+') · '+observation;
 }
+function coachFeatures(series,end){
+  const recent=series.slice(end-6,end);
+  const last=recent[5];
+  const range=Math.max(.01,recent.reduce((sum,b)=>sum+b.h-b.l,0)/recent.length);
+  const lowerWick=Math.min(last.o,last.c)-last.l;
+  const upperWick=last.h-Math.max(last.o,last.c);
+  return [1,(last.c-recent[3].c)/(2*range),(recent[3].c-recent[0].c)/(3*range),(last.c-last.o)/range,(lowerWick-upperWick)/range];
+}
+function coachScore(weights,features){
+  const logit=weights.reduce((sum,weight,i)=>sum+weight*features[i],0);
+  return 1/(1+Math.exp(-logit));
+}
+function trainCoach(){
+  const samples=[];
+  for(let example=0;example<32;example++){
+    const series=makeCandles(example,example%2?5:15,31727+919*example);
+    for(let i=6;i<series.length;i++){
+      const change=series[i].c-series[i-1].c;
+      if(change!==0)samples.push({input:coachFeatures(series,i),up:change>0?1:0});
+    }
+  }
+  let weights=Array(samples[0].input.length).fill(0);
+  for(let iteration=0;iteration<80;iteration++){
+    const gradient=Array(weights.length).fill(0);
+    for(const {input,up} of samples){
+      const error=coachScore(weights,input)-up;
+      input.forEach((value,i)=>{gradient[i]+=error*value;});
+    }
+    weights=weights.map((weight,i)=>weight-1.1*gradient[i]/samples.length);
+  }
+  return weights;
+}
+function readCoach(){
+  coachWeights??=trainCoach();
+  const score=Math.round(coachScore(coachWeights,coachFeatures(bars,shown))*100);
+  const side=score>=54?'Buy':score<=46?'Sell':null;
+  return {score,side,bar:shown,closes:bars.slice(shown-3,shown).map(b=>price(b.c))};
+}
+function renderCoach(){
+  const reading=order?.coach||readCoach();
+  $('coachTime').textContent=(order?.coach?'ตอนเปิดออเดอร์ · แท่ง ':'ประเมินจากแท่ง ')+reading.bar;
+  const signal=reading.side?'เอนเอียงทาง '+reading.side:'รอจังหวะ · ทิศทางยังไม่ชัด';
+  const status=signal+' · คะแนนขาขึ้น '+reading.score+'/100';
+  if($('coachSignal').textContent!==status)$('coachSignal').textContent=status;
+  $('coachReading').textContent='ราคาปิด 3 แท่งล่าสุด '+reading.closes.join(' → ');
+  $('coachPlan').disabled=Boolean(order)||!reading.side;
+  $('coachPlan').textContent=reading.side?'กรอกแผน '+reading.side+' จาก AI':'กรอกแผนฝึกจาก AI';
+}
 function update(){
   const b=bars[shown-1];
   const label=isDemo()?'ตัวอย่างเทรด':'โจทย์ '+(exercise+1);
@@ -277,7 +357,7 @@ function update(){
   const result=order?.state==='open'?tradeR(b.c):order?.resultR;
   $('tradeMark').textContent=result===undefined?'ราคาปิด '+price(b.c):(order.state==='open'?'ผลลอยตัว ':'ผลปิด ')+formatR(result);
   $('tradeMark').dataset.tone=result>0?'profit':result<0?'loss':'';
-  readContext();
+  if(isCoach())renderCoach();else readContext();
   draw();
 }
 function draw(){
@@ -287,7 +367,8 @@ function draw(){
   canvas.width=w*dpr;canvas.height=h*dpr;
   const ctx=canvas.getContext('2d');ctx.scale(dpr,dpr);
   const visible=bars.slice(Math.max(0,shown-32),shown), p=order||(isDemo()?{}:readPlan());
-  const low=Math.min(...visible.map(b=>b.l)),high=Math.max(...visible.map(b=>b.h));
+  const demoLevels=isDemo()&&order?[order.sl,order.tp]:[];
+  const low=Math.min(...visible.map(b=>b.l),...demoLevels),high=Math.max(...visible.map(b=>b.h),...demoLevels);
   const span=Math.max(.1,high-low), margin=span*.13, chartW=w-62;
   const width=chartW/visible.length, first=shown-visible.length+1;
   const entryColor='#f7c66b', exitColor='#d0b0ff';
@@ -342,11 +423,13 @@ function finish(reason, closedAt){
   const result=closedAt===undefined?reason:reason+' ที่ '+price(closedAt)+' · แท่ง '+shown+' · '+formatR(order.resultR);
   const entryLabel=order.entryBar?' (แท่ง '+order.entryBar+')':'';
   $('status').textContent=result;
-  recordResult(order.side+' '+price(order.entry)+entryLabel+' · SL '+price(order.sl)+' · TP '+price(order.tp)+' · '+result,order.thesis);
+  const coachLabel=order.coach?' · AI ก่อนเข้า '+(order.coach.side||'รอจังหวะ'):'';
+  recordResult(order.side+' '+price(order.entry)+entryLabel+' · SL '+price(order.sl)+' · TP '+price(order.tp)+' · '+result+coachLabel,order.thesis);
   update();
 }
 function recordResult(result,thesis){
-  history.unshift({id:crypto.randomUUID(),summary:(isPractice()?'ฝึกเข้า–ออก · ':'')+'M'+timeframe+' · โจทย์ '+(exercise+1)+' · '+result,thesis});
+  const mode=isCoach()?'ฝึกกับ AI · ':isPractice()?'ฝึกเข้า–ออก · ':'';
+  history.unshift({id:crypto.randomUUID(),summary:mode+'M'+timeframe+' · โจทย์ '+(exercise+1)+' · '+result,thesis});
   history=history.slice(0,50);
   reviewIndex=0;
   $('review').hidden=false;
@@ -415,6 +498,10 @@ function stopDemo(){
   if(demoTimer!==null)clearInterval(demoTimer);
   demoTimer=null;
 }
+function startDemoTimer(){
+  stopDemo();
+  demoTimer=setInterval(stepDemo,Number($('demoSpeed').value)||4000);
+}
 function setupDemo(){
   stopDemo();
   const example=currentDemo();
@@ -422,7 +509,15 @@ function setupDemo(){
   exercise=example.exercise;
   timeframe=5;
   setup();
-  shapeExample(example.side);
+  const {entry,distance}=samplePlan(example.side,demoReward);
+  const sign=example.side==='Buy'?1:-1;
+  let close=entry;
+  example.moves.forEach((move,i)=>{
+    const nextClose=round(entry+sign*distance*move);
+    const wick=distance*[.13,.16,.1][i%3];
+    bars[shown+i]={o:close,c:nextClose,h:round(Math.max(close,nextClose)+wick),l:round(Math.min(close,nextClose)-wick)};
+    close=nextClose;
+  });
   shown=31;
   update();
 }
@@ -447,13 +542,13 @@ function stepDemo(){
   const example=currentDemo();
   if(!order){
     shown++;
-    const {entry,sl,tp}=samplePlan(example.side);
+    const {entry,sl,tp}=samplePlan(example.side,demoReward);
     order={side:example.side,entry,sl,tp,state:'open',entryBar:shown};
     update();
     return;
   }
   next();
-  if(example.closeEarly&&order.state==='open')finish('ปิดก่อนถึงเป้า',bars[shown-1].c);
+  if(example.closeEarly&&order.state==='open'&&shown===order.entryBar+example.moves.length)finish('ปิดก่อนถึงเป้า',bars[shown-1].c);
 }
 function switchMode(mode){
   if(trainingMode===mode)return;
@@ -477,16 +572,18 @@ function switchCase(frame){
   setup();
 }
 $('watchMode').onclick=()=>switchMode('demo');
+$('coachMode').onclick=()=>switchMode('coach');
 $('practiceMode').onclick=()=>switchMode('practice');
 $('planMode').onclick=()=>switchMode('plan');
 $('demoScenario').onchange=setupDemo;
+$('demoSpeed').onchange=()=>{if(demoTimer!==null)startDemoTimer();};
 $('demoReset').onclick=setupDemo;
 $('demoStep').onclick=stepDemo;
 $('demoPlay').onclick=()=>{
   if(demoTimer!==null)stopDemo();
   else{
     if(order?.state==='done')setupDemo();
-    demoTimer=setInterval(stepDemo,1600);
+    startDemoTimer();
   }
   renderDemo();
 };
@@ -504,6 +601,13 @@ for(const button of document.querySelectorAll('[data-training]')){
 }
 $('sampleBuy').onclick=()=>fillSample('Buy');
 $('sampleSell').onclick=()=>fillSample('Sell');
+$('coachPlan').onclick=()=>{
+  if(!isCoach()||order)return;
+  const reading=readCoach();
+  if(!reading.side)return;
+  fillSample(reading.side);
+  $('thesis').value='AI เอนเอียงทาง '+reading.side+' หลังแท่ง '+reading.bar+' · คะแนนขาขึ้น '+reading.score+'/100';
+};
 $('plan').oninput=update;
 $('plan').onsubmit=event=>{
   event.preventDefault();
@@ -511,6 +615,7 @@ $('plan').onsubmit=event=>{
   const p=readPlan();
   if(!valid(p)){$('status').textContent='ตรวจลำดับราคาเข้า SL และ TP ตามทิศทางที่เลือก';return;}
   order={...p,state:isPractice()?'open':'pending',entryBar:isPractice()?shown:undefined,thesis:$('thesis').value.trim()};
+  if(isCoach())order.coach=readCoach();
   setPlanLocked(true);
   $('status').textContent=isPractice()?'เปิด '+p.side+' ที่ '+price(p.entry)+' · เปิดแท่งถัดไปหรือกดปิดออเดอร์เอง':'ล็อกแผนแล้ว เปิดแท่งถัดไปเพื่อเริ่มจำลอง';
   update();
@@ -588,6 +693,7 @@ async function showAccount(user){
   trainingMode='practice';
   previousTraining=null;
   $('demoScenario').value='0';
+  $('demoSpeed').value='4000';
   timeframe=5;
   exercise=0;
   $('side').value='Buy';
