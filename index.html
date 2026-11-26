@@ -14,6 +14,9 @@
 <li><strong>เลือกข้ามได้</strong> หากอ่านโครงสร้างยังไม่ชัดหรือจุดออกอยู่ใกล้เกินไปเมื่อเทียบกับระยะ SL ให้จดเหตุผลและข้ามโจทย์</li>
 <li><strong>ทบทวนหลังออก</strong> เทียบผลเป็น R กับสิ่งที่เห็นก่อนเปิดแท่งถัดไป แล้วจดหนึ่งอย่างที่จะปรับในการฝึกรอบหน้า</li>
 </ol></details></section>
+<section><h2>แบบฝึกจำลอง 3 สถานการณ์</h2>
+<div class="row"><button type="button" data-training="0">1 · Buy หลังราคาฟื้น</button><button type="button" data-training="1">2 · Sell หลังราคาย่อลง</button><button type="button" data-training="2">3 · ราคาแกว่งในกรอบ</button></div>
+<output id="trainingHint" aria-live="polite">เลือกโจทย์เพื่อเริ่มฝึก ระบบจะกรอกแผนตัวอย่างให้ในโจทย์ Buy และ Sell</output></section>
 <div class="layout"><section><h2 id="caption"></h2><canvas id="chart" aria-label="กราฟแท่งเทียนทองคำจำลอง"></canvas><p id="ohlc"></p><label>อ่านแท่งที่ 32 ก่อนเปิดเฉลย<select id="answer"><option value="">เลือกคำตอบ</option><option value="bull">ไส้ล่างยาวและราคาปิดเหนือราคาเปิด</option><option value="bear">ไส้บนยาวและราคาปิดต่ำกว่าราคาเปิด</option><option value="flat">ตัวแท่งสั้นและมีไส้ทั้งสองด้าน</option></select></label><button id="check">ตรวจคำตอบ</button><output id="lesson" aria-live="polite"></output></section>
 <section><h2>แผนเข้าและออก</h2><form id="plan">
 <p><small>กรอกระดับราคาทองบนกราฟ เช่น 2450.02 ทั้งสามช่อง ค่า 0.05 lot คือขนาดออเดอร์ จึงไม่มีช่องให้กรอกในแบบฝึกนี้</small></p>
@@ -36,6 +39,12 @@ const $=id=>document.getElementById(id);
 const fields=['side','entry','sl','tp','thesis'];
 const round=n=>Math.round(n*100)/100;
 const price=n=>n.toFixed(2);
+const training=[
+  {side:'Buy',hint:'อ่านไส้ล่างของแท่ง 32 แล้วดูแผน Buy กดล็อกแผนและเปิดแท่งถัดไปทีละแท่ง'},
+  {side:'Sell',hint:'อ่านไส้บนของแท่ง 32 แล้วดูแผน Sell กดล็อกแผนและเปิดแท่งถัดไปทีละแท่ง'},
+  {side:null,hint:'แท่ง 32 เปิดและปิดใกล้กัน ลองตรวจคำตอบ แล้วจดเหตุผลว่าทำไมจึงจะรอ ก่อนกดบันทึกข้ามโจทย์'}
+];
+let activeTraining=null;
 const sampleButtons=['sampleBuy','sampleSell'];
 let timeframe=5, exercise=0, bars=[], shown, order, pattern, history=[], reviewIndex=-1;
 try { history=JSON.parse(localStorage.getItem('xau-lab-v1') || '[]'); if(!Array.isArray(history)) history=[]; } catch {}
@@ -63,6 +72,7 @@ function setup(){
   const shift=last.c-bars[32].o;
   for(const bar of bars.slice(32)) for(const field of ['o','c','h','l']) bar[field]=round(bar[field]+shift);
   shown=32;order=null;
+  $('trainingHint').textContent=activeTraining===null?'เลือกโจทย์เพื่อเริ่มฝึก ระบบจะกรอกแผนตัวอย่างให้ในโจทย์ Buy และ Sell':training[activeTraining].hint;
   for(const id of [...fields,...sampleButtons]) $(id).disabled=false;
   ['entry','sl','tp','answer','thesis','reflection'].forEach(id=>$(id).value='');
   $('lesson').textContent='';$('status').textContent='';
@@ -86,6 +96,31 @@ function fillSample(side){
   $('thesis').value='ตัวอย่างฝึกกรอก ใช้ราคาปิดแท่งล่าสุดเป็นจุดเข้า ตั้ง SL ห่าง '+price(distance)+' และ TP ห่าง '+price(distance*2)+' เพื่อฝึกอ่านอัตราส่วน 1 ต่อ 2';
   $('status').textContent='กรอกตัวอย่างแล้ว ปรับราคาได้ก่อนกดล็อกแผน';
   update();
+}
+function startTraining(index){
+  if(order&&order.state!=='done'&&!confirm('ยกเลิกแผนที่กำลังฝึกและเปลี่ยนโจทย์หรือไม่?'))return;
+  activeTraining=index;
+  exercise=index;
+  timeframe=5;
+  setup();
+  const {side}=training[index];
+  if(!side){
+    $('thesis').value='ตัวแท่งสั้นและมีไส้สองด้าน ขอรอให้ราคาปิดพ้นกรอบก่อนพิจารณาแผนใหม่';
+    return;
+  }
+  fillSample(side);
+  const p=readPlan();
+  const risk=Math.abs(p.entry-p.sl);
+  const sign=side==='Buy'?1:-1;
+  const firstClose=round(p.entry+sign*risk*.4);
+  const makeBar=(o,c)=>({o,c,h:round(Math.max(o,c)+risk*.1),l:round(Math.min(o,c)-risk*.1)});
+  bars[32]=makeBar(p.entry,firstClose);
+  const level=side==='Buy'?p.tp:p.sl;
+  bars[33]=makeBar(firstClose,level);
+  const shift=level-bars[34].o;
+  for(const bar of bars.slice(34)){
+    for(const field of ['o','c','h','l'])bar[field]=round(bar[field]+shift);
+  }
 }
 function readPlan(){
   return {side:$('side').value, entry:$('entry').valueAsNumber, sl:$('sl').valueAsNumber, tp:$('tp').valueAsNumber};
@@ -196,6 +231,7 @@ function next(){
 }
 function switchCase(frame){
   if(order&&order.state!=='done'&&!confirm('ยกเลิกแผนที่กำลังฝึกและเปลี่ยนโจทย์หรือไม่?'))return;
+  activeTraining=null;
   if(frame!==undefined)timeframe=frame;else exercise++;
   setup();
 }
@@ -208,6 +244,9 @@ $('check').onclick=()=>{
   const feedback={bull:'ไส้ล่างยาวและปิดเหนือราคาเปิด แสดงว่าราคาฟื้นจากจุดต่ำของแท่ง',bear:'ไส้บนยาวและปิดต่ำกว่าราคาเปิด แสดงว่าราคาถอยจากจุดสูงของแท่ง',flat:'ราคาเปิดและปิดใกล้กัน แม้ราคาจะแกว่งขึ้นลงระหว่างแท่ง'};
   $('lesson').textContent=(answer===pattern?'ถูกต้อง · ':'เฉลย · ')+feedback[pattern]+' ลองเทียบกับแท่งก่อนหน้าเพื่อวางแผนเข้าออก';
 };
+for(const button of document.querySelectorAll('[data-training]')){
+  button.onclick=()=>startTraining(Number(button.dataset.training));
+}
 $('sampleBuy').onclick=()=>fillSample('Buy');
 $('sampleSell').onclick=()=>fillSample('Sell');
 $('plan').oninput=update;
