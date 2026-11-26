@@ -91,7 +91,7 @@ body:has(#loginScreen[hidden]) #loginBackdrop{display:none}
 <section id="trainingScenarios"><h2>แบบฝึกจำลอง 3 สถานการณ์</h2>
 <div class="row"><button type="button" data-training="0">1 · Buy หลังราคาฟื้น</button><button type="button" data-training="1">2 · Sell หลังราคาย่อลง</button><button type="button" data-training="2">3 · ราคาแกว่งในกรอบ</button></div>
 <output id="trainingHint" aria-live="polite">เลือกโจทย์เพื่อเริ่มฝึก ระบบจะกรอกแผนตัวอย่างให้ในโจทย์ Buy และ Sell</output></section>
-<div class="layout"><section><h2 id="caption"></h2><canvas id="chart" aria-label="กราฟแท่งเทียนทองคำจำลอง"></canvas><p id="ohlc"></p>
+<div class="layout"><section><h2 id="caption"></h2><canvas id="chart" aria-label="กราฟแท่งเทียนทองคำจำลองพร้อมเลขลำดับใต้แท่งเทียน"></canvas><p id="ohlc"></p>
 <div class="demo-legend" id="demoLegend" hidden><span>จุดเข้า</span><span>จุดออก</span></div>
 <div id="chartQuiz"><label>อ่านแท่งที่ 32 ก่อนเปิดเฉลย<select id="answer"><option value="">เลือกคำตอบ</option><option value="bull">ไส้ล่างยาวและราคาปิดเหนือราคาเปิด</option><option value="bear">ไส้บนยาวและราคาปิดต่ำกว่าราคาเปิด</option><option value="flat">ตัวแท่งสั้นและมีไส้ทั้งสองด้าน</option></select></label><button id="check">ตรวจคำตอบ</button><output id="lesson" aria-live="polite"></output></div></section>
 <section id="demoOrder" hidden aria-labelledby="demoTitle"><h2 id="demoTitle">ออเดอร์จำลอง</h2><output id="demoPhase" aria-live="polite"></output>
@@ -282,37 +282,50 @@ function update(){
 }
 function draw(){
   const canvas=$('chart'),w=canvas.clientWidth,h=canvas.clientHeight;
-  if(w<70||!bars.length)return;
+  if(w<110||!bars.length)return;
   const dpr=window.devicePixelRatio||1;
   canvas.width=w*dpr;canvas.height=h*dpr;
   const ctx=canvas.getContext('2d');ctx.scale(dpr,dpr);
   const visible=bars.slice(Math.max(0,shown-32),shown), p=order||(isDemo()?{}:readPlan());
   const low=Math.min(...visible.map(b=>b.l)),high=Math.max(...visible.map(b=>b.h));
   const span=Math.max(.1,high-low), margin=span*.13, chartW=w-62;
-  const y=n=>10+(high+margin-n)/(span+margin*2)*(h-35);
+  const width=chartW/visible.length, first=shown-visible.length+1;
+  const entryColor='#f7c66b', exitColor='#d0b0ff';
+  const numberFont='10px system-ui';
+  ctx.font=numberFont;
+  const numberWidth=ctx.measureText(String(shown)).width;
+  const numberRows=Math.ceil((numberWidth+4)/width);
+  const plotBottom=h-12*numberRows-8;
+  const y=n=>10+(high+margin-n)/(span+margin*2)*(plotBottom-10);
   ctx.font='11px system-ui';
   for(let i=0;i<=5;i++){
     const level=low+(high-low)*i/5, pos=y(level);
     ctx.strokeStyle='#343d4e';ctx.beginPath();ctx.moveTo(0,pos);ctx.lineTo(chartW,pos);ctx.stroke();
     ctx.fillStyle='#c3cad7';ctx.fillText(price(level),chartW+4,pos+4);
   }
-  const width=chartW/visible.length;
   visible.forEach((b,i)=>{
     const x=width*(i+.5),color=b.c>=b.o?'#52d5aa':'#ff8385';
     ctx.strokeStyle=color;ctx.beginPath();ctx.moveTo(x,y(b.h));ctx.lineTo(x,y(b.l));ctx.stroke();
     ctx.fillStyle=color;ctx.fillRect(x-width*.29,Math.min(y(b.o),y(b.c)),width*.58,Math.max(1,Math.abs(y(b.o)-y(b.c))));
   });
-  for(const [key,color,label] of [['entry','#f7c66b','เข้า'],['sl','#ff8385','SL'],['tp','#52d5aa','TP']]){
-    const pos=y(p[key]);if(!(pos>=10&&pos<=h-25))continue;
+  for(const [key,color,label] of [['entry',entryColor,'เข้า'],['sl','#ff8385','SL'],['tp','#52d5aa','TP']]){
+    const pos=y(p[key]);if(!(pos>=10&&pos<=plotBottom))continue;
     ctx.strokeStyle=color;ctx.setLineDash([4,4]);ctx.beginPath();ctx.moveTo(0,pos);ctx.lineTo(chartW,pos);ctx.stroke();ctx.setLineDash([]);
     ctx.fillStyle=color;ctx.fillText(label+' '+price(p[key]),5,pos-3);
   }
-  for(const [index,level,color] of [[order?.entryBar,order?.entry,'#f7c66b'],[order?.exitBar,order?.closedAt,'#d0b0ff']]){
-    const offset=index-(shown-visible.length+1),pos=y(level);
-    if(!(offset>=0&&offset<visible.length&&pos>=10&&pos<=h-25))continue;
+  for(const [index,level,color] of [[order?.entryBar,order?.entry,entryColor],[order?.exitBar,order?.closedAt,exitColor]]){
+    const offset=index-first,pos=y(level);
+    if(!(offset>=0&&offset<visible.length&&pos>=10&&pos<=plotBottom))continue;
     ctx.beginPath();ctx.arc(width*(offset+.5),pos,isDemo()?6:4,0,2*Math.PI);
     ctx.fillStyle=color;ctx.fill();ctx.strokeStyle='#101319';ctx.stroke();
   }
+  ctx.strokeStyle='#343d4e';ctx.beginPath();ctx.moveTo(0,plotBottom);ctx.lineTo(chartW,plotBottom);ctx.stroke();
+  ctx.font=numberFont;ctx.textAlign='center';ctx.textBaseline='top';
+  visible.forEach((_,i)=>{
+    const index=first+i, x=Math.max(numberWidth/2,width*(i+.5));
+    ctx.fillStyle=index===order?.exitBar?exitColor:index===order?.entryBar?entryColor:index===shown?'#ebedf2':'#c4cbd7';
+    ctx.fillText(String(index),x,plotBottom+5+i%numberRows*12);
+  });
 }
 function tradeR(closedAt){
   return (closedAt-order.entry)*(order.side==='Buy'?1:-1)/Math.abs(order.entry-order.sl);
