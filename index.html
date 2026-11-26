@@ -55,6 +55,11 @@ body:has(#loginScreen[hidden]) #loginBackdrop{display:none}
 <p class="signup-row"><button type="button" class="account-link" id="backToLogin">กลับไปเข้าสู่ระบบ</button></p>
 </form>
 <div id="signupNext" hidden><button type="button" class="account-link" id="doneSignup">กลับไปเข้าสู่ระบบ</button></div>
+<form id="forgotForm" hidden>
+<label>อีเมลที่ใช้สมัคร<input id="forgotEmail" type="email" autocomplete="email" placeholder="name@example.com" required></label>
+<button class="login-primary" id="sendReset">ส่งลิงก์รีเซ็ต</button>
+</form>
+<p id="forgotBackRow" class="signup-row" hidden><button type="button" class="account-link" id="forgotBack">กลับไปเข้าสู่ระบบ</button></p>
 <form id="recoveryForm" hidden><label>รหัสผ่านใหม่<input id="newPassword" type="password" autocomplete="new-password" minlength="8" required></label><button class="login-primary" id="savePassword">บันทึกรหัสผ่านใหม่</button></form>
 <output id="accountStatus" aria-live="polite"></output></section><div id="trainingScreen" hidden inert><div id="signedIn" hidden><p id="accountName"></p><button type="button" id="signOut">ออกจากระบบ</button></div><output id="trainingAccountStatus" aria-live="polite"></output><header><h1>XAUUSD Trading Lab</h1><p>ฝึกอ่านแท่งเทียน วางแผนเข้าออก และทดสอบแผนด้วยข้อมูลจำลอง</p></header>
 <nav class="training-modes" aria-label="โหมดฝึกเทรด"><button type="button" id="practiceMode" aria-pressed="true">ฝึกเข้า–ออกออเดอร์</button><button type="button" id="planMode" aria-pressed="false">วางแผนล่วงหน้า</button></nav>
@@ -419,6 +424,8 @@ function showLogin(){
   $('accountForm').hidden=false;
   $('signupForm').hidden=true;
   $('signupNext').hidden=true;
+  $('forgotForm').hidden=true;
+  $('forgotBackRow').hidden=true;
   $('signupPassword').value='';
   $('signupConfirm').value='';
   accountMessage('');
@@ -431,11 +438,13 @@ function showRecovery(){
   $('accountForm').hidden=true;
   $('signupForm').hidden=true;
   $('signupNext').hidden=true;
+  $('forgotForm').hidden=true;
+  $('forgotBackRow').hidden=true;
   $('recoveryForm').hidden=false;
   window.history.replaceState(null,'',accountUrl);
 }
 function setAccountBusy(busy){
-  for(const id of ['signIn','signUp','signOut','accountEmail','accountPassword','forgotPassword','resendConfirmation','savePassword','newPassword','signupEmail','signupPassword','signupConfirm','createAccount','backToLogin','doneSignup'])$(id).disabled=busy;
+  for(const id of ['signIn','signUp','signOut','accountEmail','accountPassword','forgotPassword','resendConfirmation','savePassword','newPassword','signupEmail','signupPassword','signupConfirm','createAccount','backToLogin','doneSignup','forgotEmail','sendReset','forgotBack'])$(id).disabled=busy;
 }
 async function showAccount(user){
   if(accountReady&&accountUser?.id===user?.id)return;
@@ -516,10 +525,31 @@ async function initAccounts(){
         accountMessage(error?(emailLimitMessage(error)||'ส่งอีเมลไม่สำเร็จ กรุณาตรวจอีเมลหรือรอสักครู่แล้วลองใหม่'):message);
       });
     }
-    $('forgotPassword').onclick=()=>sendAccountEmail(
-      email=>accountClient.auth.resetPasswordForEmail(email,{redirectTo:accountUrl}),
-      'หากอีเมลนี้มีบัญชี ให้ตรวจกล่องจดหมายเพื่อเปิดลิงก์ตั้งรหัสผ่านใหม่'
-    );
+    $('forgotPassword').onclick=()=>{
+      $('forgotEmail').value=$('accountEmail').value.trim();
+      $('accountForm').hidden=true;
+      $('forgotForm').hidden=false;
+      $('forgotBackRow').hidden=false;
+      $('loginTitle').textContent='ลืมรหัสผ่าน';
+      $('loginIntro').textContent='กรอกอีเมลที่ใช้สมัครเพื่อขอลิงก์ตั้งรหัสผ่านใหม่';
+      accountMessage('');
+      $('forgotEmail').focus();
+    };
+    $('forgotBack').onclick=showLogin;
+    $('forgotForm').onsubmit=event=>{
+      event.preventDefault();
+      const email=$('forgotEmail').value.trim();
+      accountAction(async()=>{
+        const {error}=await accountClient.auth.resetPasswordForEmail(email,{redirectTo:accountUrl});
+        if(error){accountMessage(emailLimitMessage(error)||'ส่งคำขอไม่สำเร็จ กรุณาลองใหม่');return;}
+        $('accountEmail').value=email;
+        $('forgotForm').hidden=true;
+        $('loginTitle').textContent='ตรวจสอบอีเมล';
+        $('loginIntro').textContent='หากอีเมลนี้มีบัญชี ให้เปิดลิงก์ฉบับล่าสุดเพื่อตั้งรหัสผ่านใหม่';
+        accountMessage('');
+        $('forgotBack').focus();
+      });
+    };
     $('resendConfirmation').onclick=()=>sendAccountEmail(
       email=>accountClient.auth.resend({type:'signup',email,options:{emailRedirectTo:accountUrl}}),
       'หากบัญชีนี้รอยืนยัน ให้ตรวจกล่องจดหมายและจดหมายขยะ'
