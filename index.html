@@ -35,6 +35,14 @@ body:has(#loginScreen[hidden]) #loginBackdrop{display:none}
 <p class="signup-row">ยังไม่มีบัญชี? <button type="button" class="account-link" id="signUp">สมัครบัญชี</button></p>
 <button type="button" class="account-link" id="resendConfirmation">ยังไม่ได้รับอีเมลยืนยัน? ส่งอีกครั้ง</button>
 </form>
+<form id="signupForm" hidden>
+<label>อีเมล<input id="signupEmail" type="email" autocomplete="email" placeholder="name@example.com" required></label>
+<label>รหัสผ่าน<input id="signupPassword" type="password" autocomplete="new-password" minlength="8" required></label>
+<label>ยืนยันรหัสผ่าน<input id="signupConfirm" type="password" autocomplete="new-password" minlength="8" required></label>
+<button class="login-primary" id="createAccount">สร้างบัญชี</button>
+<p class="signup-row"><button type="button" class="account-link" id="backToLogin">กลับไปเข้าสู่ระบบ</button></p>
+</form>
+<div id="signupNext" hidden><button type="button" class="account-link" id="doneSignup">กลับไปเข้าสู่ระบบ</button></div>
 <form id="recoveryForm" hidden><label>รหัสผ่านใหม่<input id="newPassword" type="password" autocomplete="new-password" minlength="8" required></label><button class="login-primary" id="savePassword">บันทึกรหัสผ่านใหม่</button></form>
 <output id="accountStatus" aria-live="polite"></output></section><div id="trainingScreen" hidden inert><div id="signedIn" hidden><p id="accountName"></p><button type="button" id="signOut">ออกจากระบบ</button></div><output id="trainingAccountStatus" aria-live="polite"></output><header><h1>XAUUSD Trading Lab</h1><p>ฝึกอ่านแท่งเทียน วางแผนเข้าออก และทดสอบแผนด้วยข้อมูลจำลอง</p></header>
 <div class="row"><button id="m5">M5</button><button id="m15">M15</button><button id="newCase">โจทย์ถัดไป</button></div>
@@ -331,17 +339,29 @@ const accountConfig={url:'https://lfarepyluyfmnxnubzdr.supabase.co',publishableK
 const accountMessage=message=>{$(accountUser?'trainingAccountStatus':'accountStatus').textContent=message;};
 const accountUrl='https://purongair-app.github.io/XAUUSD/';
 let recoveryMode=false;
+function showLogin(){
+  $('loginTitle').textContent='เข้าสู่ระบบ';
+  $('loginIntro').textContent='เข้าสู่ระบบเพื่อเริ่มฝึกและดูสมุดบันทึกของคุณ';
+  $('accountForm').hidden=false;
+  $('signupForm').hidden=true;
+  $('signupNext').hidden=true;
+  $('signupPassword').value='';
+  $('signupConfirm').value='';
+  accountMessage('');
+}
 function showRecovery(){
   recoveryMode=true;
   void showAccount(null);
   $('loginTitle').textContent='ตั้งรหัสผ่านใหม่';
   $('loginIntro').textContent='ใช้รหัสผ่านอย่างน้อย 8 ตัวอักษร';
   $('accountForm').hidden=true;
+  $('signupForm').hidden=true;
+  $('signupNext').hidden=true;
   $('recoveryForm').hidden=false;
   window.history.replaceState(null,'',accountUrl);
 }
 function setAccountBusy(busy){
-  for(const id of ['signIn','signUp','signOut','accountEmail','accountPassword','forgotPassword','resendConfirmation','savePassword','newPassword'])$(id).disabled=busy;
+  for(const id of ['signIn','signUp','signOut','accountEmail','accountPassword','forgotPassword','resendConfirmation','savePassword','newPassword','signupEmail','signupPassword','signupConfirm','createAccount','backToLogin','doneSignup'])$(id).disabled=busy;
 }
 async function showAccount(user){
   if(accountReady&&accountUser?.id===user?.id)return;
@@ -359,7 +379,7 @@ async function showAccount(user){
   $('accountPassword').value='';
   $('accountStatus').textContent='';
   $('trainingAccountStatus').textContent='';
-  if(!user)return;
+  if(!user){if(!recoveryMode)showLogin();return;}
   draw();
   const controls=['lock','skip'];
   for(const id of controls)$(id).disabled=true;
@@ -442,16 +462,35 @@ async function initAccounts(){
       });
     };
     $('signUp').onclick=()=>{
-      if(!$('accountForm').reportValidity())return;
-      const email=$('accountEmail').value.trim(),password=$('accountPassword').value;
-      if(password.length<8){accountMessage('ใช้รหัสผ่านอย่างน้อย 8 ตัวอักษร');return;}
+      $('signupForm').reset();
+      $('signupEmail').value=$('accountEmail').value.trim();
+      $('accountForm').hidden=true;
+      $('signupForm').hidden=false;
+      $('loginTitle').textContent='สมัครบัญชี';
+      $('loginIntro').textContent='สร้างบัญชีสำหรับเก็บผลฝึกของคุณ ใช้รหัสผ่านอย่างน้อย 8 ตัวอักษร';
+      accountMessage('');
+      $('signupEmail').focus();
+    };
+    $('backToLogin').onclick=$('doneSignup').onclick=showLogin;
+    $('signupForm').onsubmit=event=>{
+      event.preventDefault();
+      const email=$('signupEmail').value.trim(),password=$('signupPassword').value;
+      if(password!==$('signupConfirm').value){
+        accountMessage('รหัสผ่านทั้งสองช่องไม่ตรงกัน');
+        $('signupConfirm').focus();
+        return;
+      }
       accountAction(async()=>{
-        const emailRedirectTo='https://purongair-app.github.io/XAUUSD/';
-        const {data,error}=await accountClient.auth.signUp({email,password,options:{emailRedirectTo}});
+        const {data,error}=await accountClient.auth.signUp({email,password,options:{emailRedirectTo:accountUrl}});
         if(error){accountMessage(error.code==='email_address_not_authorized'?'ระบบส่งอีเมลยืนยันยังไม่รองรับอีเมลนี้':'สมัครบัญชีไม่สำเร็จ กรุณาตรวจข้อมูลและลองใหม่');return;}
-        $('accountPassword').value='';
-        if(data.session)await showAccount(data.user);
-        else accountMessage('ตรวจอีเมลเพื่อยืนยันการสมัคร แล้วกลับมาเข้าสู่ระบบ');
+        $('accountEmail').value=email;
+        $('signupForm').reset();
+        if(data.session){await showAccount(data.user);return;}
+        $('signupForm').hidden=true;
+        $('signupNext').hidden=false;
+        $('loginTitle').textContent='ตรวจสอบอีเมล';
+        $('loginIntro').textContent='เปิดลิงก์ในอีเมลเพื่อยืนยันบัญชี แล้วกลับมาเข้าสู่ระบบ';
+        accountMessage('');
       });
     };
     $('signOut').onclick=()=>accountAction(async()=>{
