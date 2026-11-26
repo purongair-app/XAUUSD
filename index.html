@@ -177,7 +177,51 @@ body:has(#trainingScreen:not([hidden])) main{max-width:1460px;padding:18px 24px 
   .manual-header{padding:10px 12px}
   #manualBody{padding:2px 12px 12px}
 }
-.guide-patterns{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,235px),1fr));gap:12px;margin:12px 0}.guide-card{background:#121722;border:1px solid #384354;border-radius:12px;padding:14px}.guide-card h3{margin:10px 0 4px;font-size:16px;overflow-wrap:anywhere}.guide-card p{margin:0;font-size:14px}.guide-chart{position:relative;height:132px;border-radius:8px;background:repeating-linear-gradient(to bottom,#283246 0 1px,transparent 1px 25%);overflow:hidden}.guide-candle{position:absolute;inset:0 auto 0 var(--x);color:#ff7585;width:clamp(12px,4vw,24px);transform:translateX(-50%);z-index:1}.guide-candle.up{color:#50e0ad}.guide-candle.context{opacity:.45}.guide-candle:before{content:"";position:absolute;left:calc(50% - 1px);top:var(--high);height:var(--wick);width:2px;background:currentColor}.guide-candle i{position:absolute;inset:var(--top) 0 auto;background:currentColor;height:var(--body);min-height:2px;border-radius:2px}.guide-level{position:absolute;inset:var(--level) 0 auto;border-top:2px dashed #f7c66b}#levelTools{margin:8px 0}.level-tool[aria-pressed="true"]{background:#f7c66b;border-color:#f7c66b;color:#172030}#chart[data-marking]{cursor:crosshair}#markedLevels{padding-left:0;list-style:none}#markedLevels:empty{display:none}#markedLevels li{display:flex;align-items:center;gap:10px}#markedLevels button{padding:4px 10px;min-height:34px}</style>
+.guide-patterns{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,235px),1fr));gap:12px;margin:12px 0}.guide-card{background:#121722;border:1px solid #384354;border-radius:12px;padding:14px}.guide-card h3{margin:10px 0 4px;font-size:16px;overflow-wrap:anywhere}.guide-card p{margin:0;font-size:14px}.guide-chart{position:relative;height:132px;border-radius:8px;background:repeating-linear-gradient(to bottom,#283246 0 1px,transparent 1px 25%);overflow:hidden}.guide-candle{position:absolute;inset:0 auto 0 var(--x);color:#ff7585;width:clamp(12px,4vw,24px);transform:translateX(-50%);z-index:1}.guide-candle.up{color:#50e0ad}.guide-candle.context{opacity:.45}.guide-candle:before{content:"";position:absolute;left:calc(50% - 1px);top:var(--high);height:var(--wick);width:2px;background:currentColor}.guide-candle i{position:absolute;inset:var(--top) 0 auto;background:currentColor;height:var(--body);min-height:2px;border-radius:2px}.guide-level{position:absolute;inset:var(--level) 0 auto;border-top:2px dashed #f7c66b}#levelTools{margin:8px 0}.level-tool[aria-pressed="true"]{background:#f7c66b;border-color:#f7c66b;color:#172030}#chart[data-marking]{cursor:crosshair}#markedLevels{padding-left:0;list-style:none}#markedLevels:empty{display:none}#markedLevels li{display:flex;align-items:center;gap:10px}#markedLevels button{padding:4px 10px;min-height:34px}.workspace-content,.workspace-content .layout>section,.reading-grid>section{min-width:0}
+#chart{touch-action:pan-y pinch-zoom}
+#levelTools{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:stretch;gap:6px}
+#levelTools button,#markedLevels button{min-height:44px}
+#levelTools button{min-width:0;padding:8px 4px;font-size:.86rem}
+#markedLevels li{justify-content:space-between}
+#trainingScreen :is(button,input,select,textarea,summary):focus-visible{outline:2px solid #f7c66b;outline-offset:2px}
+#trainingScreen :is(input,select,textarea){font-size:16px}
+@media (max-width:1050px){
+  #trainingScreen .workspace-layout{grid-template-columns:minmax(0,1fr)}
+  .lesson-nav{position:static;max-height:none;padding:10px 12px;overflow:visible}
+  .lesson-nav-title,.lesson-group{display:none}
+  .lesson-picker{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);align-items:center;gap:8px;margin:0}
+  .lesson-picker select{min-height:44px}
+  .manual-nav{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:8px;padding-top:8px}
+  .manual-nav button{text-align:center}
+  .workspace-content .layout{grid-template-columns:minmax(0,1fr);gap:0}
+  .workspace-content #chart{height:clamp(260px,48vw,440px)}
+  .phone-chart-controls{display:block;margin:10px 0}
+  .phone-chart-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+  .phone-chart-actions button,.training-controls button{min-height:44px}
+  .training-nav button{min-height:44px}
+}
+@media (max-width:480px){
+  body:has(#trainingScreen:not([hidden])) main{padding-inline:10px}
+  .workspace-content #chart{height:286px}
+  #trainingScreen .workspace-header h1{overflow-wrap:anywhere}
+  #tradePanel .training-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+  #tradePanel .training-controls .primary{grid-column:1/-1}
+}
+
+.lesson-inline{display:none}
+@media(max-width:1050px){
+  .lesson-inline{display:block;margin:0}
+  .lesson-inline summary{min-height:48px;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;border:1px solid #46546a;border-radius:8px;background:#202b3b;list-style:none}
+  .lesson-inline summary::-webkit-details-marker{display:none}
+  .lesson-inline summary::after{content:'▾';flex:none}
+  .lesson-inline[open] summary::after{content:'▴'}
+  .lesson-inline .lesson-inline-options{display:grid;gap:6px;margin-top:8px}
+  .lesson-inline-options button{min-height:44px;text-align:start}
+}
+#candleExampleButtons{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:8px 0}
+#candleExampleButtons button{min-height:44px;padding:6px}
+#candleExampleButtons button[aria-pressed=true],.lesson-inline-options button[aria-pressed=true]{border-color:#f7c66b;color:#f7c66b}
+</style>
 <div id="loginBackdrop" aria-hidden="true"><span style="--x:3%;--y:72%;--wick:8%"></span><span style="--x:7.1%;--y:66%;--wick:15%"></span><span class="down" style="--x:11.2%;--y:68%;--wick:14%"></span><span style="--x:15.299999999999999%;--y:58%;--wick:13%"></span><span style="--x:19.4%;--y:53%;--wick:12%"></span><span class="down" style="--x:23.5%;--y:56%;--wick:11%"></span><span style="--x:27.599999999999998%;--y:48%;--wick:10%"></span><span style="--x:31.699999999999996%;--y:42%;--wick:9%"></span><span class="down" style="--x:35.8%;--y:45%;--wick:8%"></span><span style="--x:39.9%;--y:35%;--wick:15%"></span><span style="--x:44%;--y:30%;--wick:14%"></span><span class="down" style="--x:48.099999999999994%;--y:37%;--wick:13%"></span><span class="down" style="--x:52.199999999999996%;--y:40%;--wick:12%"></span><span class="down" style="--x:56.3%;--y:47%;--wick:11%"></span><span style="--x:60.39999999999999%;--y:41%;--wick:10%"></span><span style="--x:64.5%;--y:32%;--wick:9%"></span><span style="--x:68.6%;--y:25%;--wick:8%"></span><span class="down" style="--x:72.69999999999999%;--y:28%;--wick:15%"></span><span style="--x:76.8%;--y:18%;--wick:14%"></span><span class="down" style="--x:80.89999999999999%;--y:20%;--wick:13%"></span><span style="--x:85%;--y:12%;--wick:12%"></span><span class="down" style="--x:89.1%;--y:15%;--wick:11%"></span><span style="--x:93.19999999999999%;--y:8%;--wick:10%"></span><span class="down" style="--x:97.3%;--y:11%;--wick:9%"></span></div><main><section id="loginScreen" aria-label="เข้าสู่ระบบ Trading Lab">
 <p class="brand">PUROnGXAU</p>
 <h1 id="loginTitle">เข้าสู่ระบบ</h1><p id="loginIntro">เข้าสู่ระบบเพื่อเริ่มฝึกและดูสมุดบันทึกของคุณ</p>
@@ -227,13 +271,8 @@ body:has(#trainingScreen:not([hidden])) main{max-width:1460px;padding:18px 24px 
     <button type="button" id="retestMode" aria-pressed="false"><span class="lesson-count">5</span> Breakout &amp; Retest</button>
     <button type="button" id="planMode" aria-pressed="false"><span class="lesson-count">6</span> วางแผนล่วงหน้า</button>
   </div>
-  <label class="lesson-picker">เลือกบทเรียน
-    <select id="lessonSelect">
-      <optgroup label="เริ่มต้น"><option value="candle">1 · อ่านแท่งเทียน</option><option value="demo">2 · ดูเทรดจำลอง</option><option value="coach">3 · ฝึกเทรดกับ AI</option></optgroup>
-      <optgroup label="ปานกลาง"><option value="practice">4 · ฝึกเข้า–ออกเอง</option></optgroup>
-      <optgroup label="ขั้นสูง"><option value="retest">5 · Breakout &amp; Retest</option><option value="plan">6 · วางแผนล่วงหน้า</option></optgroup>
-    </select>
-  </label>
+  <details class="lesson-inline" id="lessonPicker"><summary><span id="lessonPickerLabel">เลือกบทเรียน</span></summary>
+<div class="lesson-inline-options"><button type="button" data-inline-lesson="candle" aria-pressed="true">1 · อ่านแท่งเทียน</button><button type="button" data-inline-lesson="demo" aria-pressed="false">2 · ดูเทรดจำลอง</button><button type="button" data-inline-lesson="coach" aria-pressed="false">3 · ฝึกเทรดกับ AI</button><button type="button" data-inline-lesson="practice" aria-pressed="false">4 · ฝึกเข้า–ออกเอง</button><button type="button" data-inline-lesson="retest" aria-pressed="false">5 · Breakout &amp; Retest</button><button type="button" data-inline-lesson="plan" aria-pressed="false">6 · วางแผนล่วงหน้า</button></div></details>
   <div class="manual-nav">
     <button type="button" id="openTradeManual" aria-haspopup="dialog">คู่มือเทรด XAUUSD</button>
     <button type="button" id="openSystemManual" aria-haspopup="dialog">คู่มือใช้งานระบบ</button>
@@ -246,7 +285,7 @@ body:has(#trainingScreen:not([hidden])) main{max-width:1460px;padding:18px 24px 
 </header>
 <div class="reading-grid" id="candleLesson" hidden>
 <section><h2>ราคา 4 จุดในแท่งเดียว</h2>
-  <label>เลือกแท่งตัวอย่าง<select id="candleExample"><option value="0">ตัวอย่าง A</option><option value="1">ตัวอย่าง B</option><option value="2">ตัวอย่าง C</option></select></label>
+  <div role="group" aria-label="เลือกแท่งตัวอย่าง" id="candleExampleButtons"><button type="button" data-candle-example="0" aria-pressed="true">ตัวอย่าง A</button><button type="button" data-candle-example="1" aria-pressed="false">ตัวอย่าง B</button><button type="button" data-candle-example="2" aria-pressed="false">ตัวอย่าง C</button></div><input id="candleExample" type="hidden" value="0">
   <div class="candle-example">
     <div class="candle-figure" id="candleFigure" aria-hidden="true"><span class="candle-wick"></span><span class="candle-body"></span></div>
     <dl class="reading-values"><div><dt>เปิด (Open)</dt><dd id="candleOpen"></dd></div><div><dt>สูงสุด (High)</dt><dd id="candleHigh"></dd></div><div><dt>ต่ำสุด (Low)</dt><dd id="candleLow"></dd></div><div><dt>ปิด (Close)</dt><dd id="candleClose"></dd></div></dl>
@@ -501,7 +540,11 @@ function renderLesson(){
   $('lessonLevel').textContent='บทที่ '+(index+1)+' จาก '+lessons.length+' · '+lesson.level;
   $('workspaceTitle').textContent=lesson.title;
   $('lessonIntro').textContent=lesson.intro;
-  if($('lessonSelect').value!==lesson.mode)$('lessonSelect').value=lesson.mode;
+  for(const button of document.querySelectorAll('[data-inline-lesson]')){
+    const selected=button.dataset.inlineLesson===lesson.mode;
+    button.setAttribute('aria-pressed',String(selected));
+    if(selected)$('lessonPickerLabel').textContent='เลือกบทเรียน · '+button.textContent;
+  }
   $('lessonNext').hidden=!nextLesson;
   if(nextLesson)$('lessonNext').setAttribute('aria-label','บทถัดไป · '+nextLesson.title);
   for(const {mode,button} of lessons)$(button).setAttribute('aria-pressed',String(trainingMode===mode));
@@ -517,6 +560,9 @@ function candleDirection({o,c}){
   return c<o?'down':'flat';
 }
 function renderCandleExample(){
+  for(const button of document.querySelectorAll('[data-candle-example]')){
+    button.setAttribute('aria-pressed',String(button.dataset.candleExample===$('candleExample').value));
+  }
   const candle=currentCandleExample();
   const {o,h,l,c}=candle;
   const figure=$('candleFigure');
@@ -1003,7 +1049,12 @@ $('manualDialog').onclick=event=>{
     $('workspaceTitle').focus();
   }
 };
-$('candleExample').onchange=renderCandleExample;
+for(const button of document.querySelectorAll('[data-candle-example]')){
+  button.onclick=()=>{
+    $('candleExample').value=button.dataset.candleExample;
+    renderCandleExample();
+  };
+}
 $('candleQuiz').onsubmit=event=>{
   event.preventDefault();
   const direction=candleDirection(currentCandleExample());
@@ -1015,11 +1066,16 @@ $('retestQuiz').onsubmit=event=>{
   const correct=$('retestAnswer').value==='3';
   $('retestFeedback').textContent=(correct?'ถูกต้อง · ':'ลองอ่านอีกครั้ง · ')+'แท่ง 2 ปิดเหนือแนวต้าน จากนั้นแท่ง 3 ย่อลงมาใกล้ 2450.00 และปิดกลับเหนือระดับเดิม';
 };
-$('lessonSelect').onchange=()=>{
-  const picker=$('lessonSelect');
-  switchMode(picker.value);
-  if(picker.value!==trainingMode)picker.value=trainingMode;
-};
+for(const button of document.querySelectorAll('[data-inline-lesson]')){
+  button.onclick=()=>{
+    const mode=button.dataset.inlineLesson;
+    switchMode(mode);
+    if(trainingMode===mode){
+      $('lessonPicker').open=false;
+      $('lessonPicker').querySelector('summary').focus({preventScroll:true});
+    }
+  };
+}
 $('lessonNext').onclick=()=>{
   const nextLesson=lessons[currentLessonIndex()+1];
   if(!nextLesson)return;
