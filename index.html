@@ -16,6 +16,8 @@
 </ol></details></section>
 <div class="layout"><section><h2 id="caption"></h2><canvas id="chart" aria-label="กราฟแท่งเทียนทองคำจำลอง"></canvas><p id="ohlc"></p><label>อ่านแท่งที่ 32 ก่อนเปิดเฉลย<select id="answer"><option value="">เลือกคำตอบ</option><option value="bull">ไส้ล่างยาวและราคาปิดเหนือราคาเปิด</option><option value="bear">ไส้บนยาวและราคาปิดต่ำกว่าราคาเปิด</option><option value="flat">ตัวแท่งสั้นและมีไส้ทั้งสองด้าน</option></select></label><button id="check">ตรวจคำตอบ</button><output id="lesson" aria-live="polite"></output></section>
 <section><h2>แผนเข้าและออก</h2><form id="plan">
+<p><small>กรอกระดับราคาทองบนกราฟ เช่น 2450.02 ทั้งสามช่อง ค่า 0.05 lot คือขนาดออเดอร์ จึงไม่มีช่องให้กรอกในแบบฝึกนี้</small></p>
+<div class="row"><button type="button" id="sampleBuy">กรอกตัวอย่าง Buy</button><button type="button" id="sampleSell">กรอกตัวอย่าง Sell</button></div>
 <label>ทิศทาง<select id="side"><option>Buy</option><option>Sell</option></select></label>
 <label>ราคาเข้า<input id="entry" type="number" step=".01" min=".01" required></label>
 <label>Stop Loss (SL)<input id="sl" type="number" step=".01" min=".01" required></label>
@@ -34,6 +36,7 @@ const $=id=>document.getElementById(id);
 const fields=['side','entry','sl','tp','thesis'];
 const round=n=>Math.round(n*100)/100;
 const price=n=>n.toFixed(2);
+const sampleButtons=['sampleBuy','sampleSell'];
 let timeframe=5, exercise=0, bars=[], shown, order, pattern, history=[], reviewIndex=-1;
 try { history=JSON.parse(localStorage.getItem('xau-lab-v1') || '[]'); if(!Array.isArray(history)) history=[]; } catch {}
 function renderHistory(){
@@ -60,12 +63,28 @@ function setup(){
   const shift=last.c-bars[32].o;
   for(const bar of bars.slice(32)) for(const field of ['o','c','h','l']) bar[field]=round(bar[field]+shift);
   shown=32;order=null;
-  for(const id of fields) $(id).disabled=false;
+  for(const id of [...fields,...sampleButtons]) $(id).disabled=false;
   ['entry','sl','tp','answer','thesis','reflection'].forEach(id=>$(id).value='');
   $('lesson').textContent='';$('status').textContent='';
   reviewIndex=-1;$('review').hidden=true;$('reviewStatus').textContent='';$('skip').disabled=false;
   $('lock').disabled=false;$('step').disabled=true;$('exit').disabled=true;
   for(const frame of [5,15]) $('m'+frame).classList.toggle('primary',frame===timeframe);
+  update();
+}
+function fillSample(side){
+  if(order)return;
+  const bar=bars[shown-1];
+  const entry=bar.c;
+  const distance=Math.max(0.5,round((bar.h-bar.l)/2));
+  const direction=side==='Buy'?1:-1;
+  const sl=round(entry-direction*distance);
+  const tp=round(entry+direction*distance*2);
+  $('side').value=side;
+  $('entry').value=price(entry);
+  $('sl').value=price(sl);
+  $('tp').value=price(tp);
+  $('thesis').value='ตัวอย่างฝึกกรอก ใช้ราคาปิดแท่งล่าสุดเป็นจุดเข้า ตั้ง SL ห่าง '+price(distance)+' และ TP ห่าง '+price(distance*2)+' เพื่อฝึกอ่านอัตราส่วน 1 ต่อ 2';
+  $('status').textContent='กรอกตัวอย่างแล้ว ปรับราคาได้ก่อนกดล็อกแผน';
   update();
 }
 function readPlan(){
@@ -189,6 +208,8 @@ $('check').onclick=()=>{
   const feedback={bull:'ไส้ล่างยาวและปิดเหนือราคาเปิด แสดงว่าราคาฟื้นจากจุดต่ำของแท่ง',bear:'ไส้บนยาวและปิดต่ำกว่าราคาเปิด แสดงว่าราคาถอยจากจุดสูงของแท่ง',flat:'ราคาเปิดและปิดใกล้กัน แม้ราคาจะแกว่งขึ้นลงระหว่างแท่ง'};
   $('lesson').textContent=(answer===pattern?'ถูกต้อง · ':'เฉลย · ')+feedback[pattern]+' ลองเทียบกับแท่งก่อนหน้าเพื่อวางแผนเข้าออก';
 };
+$('sampleBuy').onclick=()=>fillSample('Buy');
+$('sampleSell').onclick=()=>fillSample('Sell');
 $('plan').oninput=update;
 $('plan').onsubmit=event=>{
   event.preventDefault();
@@ -197,14 +218,14 @@ $('plan').onsubmit=event=>{
   if(!valid(p)){$('status').textContent='ตรวจลำดับราคาเข้า SL และ TP ตามทิศทางที่เลือก';return;}
   order={...p,state:'pending',thesis:$('thesis').value.trim()};
   $('skip').disabled=true;
-  for(const id of fields)$(id).disabled=true;
+  for(const id of [...fields,...sampleButtons])$(id).disabled=true;
   $('lock').disabled=true;$('step').disabled=false;
   $('status').textContent='ล็อกแผนแล้ว เปิดแท่งถัดไปเพื่อเริ่มจำลอง';
 };
 $('skip').onclick=()=>{
   if(order)return;
   order={state:'done'};
-  for(const id of fields)$(id).disabled=true;
+  for(const id of [...fields,...sampleButtons])$(id).disabled=true;
   $('lock').disabled=true;$('skip').disabled=true;
   $('status').textContent='บันทึกข้ามโจทย์แล้ว';
   recordResult('ข้ามโจทย์',$('thesis').value.trim());
